@@ -1,30 +1,31 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
-import { createIngest, getDashboard } from "./api";
+import { EventsTimeline } from "./components/EventsTimeline";
+import { IngestPanel } from "./components/IngestPanel";
+import { KpiCards } from "./components/KpiCards";
+import { RecordsTable } from "./components/RecordsTable";
+import { RunStatus } from "./components/RunStatus";
+import { StoreFilter } from "./components/StoreFilter";
+import { useDashboard, useEvents } from "./queries";
 import { useUiStore } from "./store";
 
 function App() {
-  const queryClient = useQueryClient();
   const { selectedStore, selectedRun, setSelectedStore, setSelectedRun } = useUiStore();
-  const dashboard = useQuery({
-    queryKey: ["dashboard"],
-    queryFn: getDashboard,
-    refetchInterval: 3000,
-  });
-  const ingest = useMutation({
-    mutationFn: createIngest,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["dashboard"] }),
-  });
+  const dashboard = useDashboard();
+  const eventsQuery = useEvents(selectedRun === "all" ? null : selectedRun);
 
   const data = dashboard.data;
+  const latestRun = data?.runs[0];
+
   const records = (data?.records ?? []).filter((record) => {
     const storeMatches = selectedStore === "all" || record.store_id === selectedStore;
     const runMatches = selectedRun === "all" || record.run_id === selectedRun;
     return storeMatches && runMatches;
   });
-  const events = (data?.events ?? []).filter(
-    (event) => selectedRun === "all" || event.run_id === selectedRun,
-  );
+
+  // When a specific run is selected use the dedicated events query; otherwise use dashboard events
+  const events =
+    selectedRun !== "all"
+      ? (eventsQuery.data ?? [])
+      : (data?.events ?? []);
 
   return (
     <main className="shell">
@@ -37,80 +38,36 @@ function App() {
             persisted workflow events explain every step.
           </p>
         </div>
-        <button disabled={ingest.isPending} onClick={() => ingest.mutate()}>
-          {ingest.isPending ? "Queueing..." : "Ingest messy CSV"}
-        </button>
+        <IngestPanel />
       </section>
 
-      {dashboard.isError ? <p className="error">API unavailable. Start `poetry run api`.</p> : null}
+      {dashboard.isError && (
+        <p className="error">API unavailable — start the backend with <code>poetry run api</code>.</p>
+      )}
+      {dashboard.isLoading && <p className="loading">Connecting to API…</p>}
 
-      <section className="kpis">
-        <article><span>Raw rows</span><strong>{data?.kpis.total_raw_rows ?? 0}</strong></article>
-        <article><span>Normalized</span><strong>{data?.kpis.total_normalized_rows ?? 0}</strong></article>
-        <article><span>Quality fixes</span><strong>{data?.kpis.quality_issue_count ?? 0}</strong></article>
-        <article><span>Reorders</span><strong>{data?.kpis.reorder_count ?? 0}</strong></article>
-        <article><span>Stockouts</span><strong>{data?.kpis.stockout_count ?? 0}</strong></article>
-      </section>
+      <RunStatus run={latestRun} />
 
-      <section className="controls">
-        <label>
-          Store
-          <select value={selectedStore} onChange={(event) => setSelectedStore(event.target.value)}>
-            <option value="all">All stores</option>
-            {(data?.stores ?? []).map((store) => (
-              <option key={store.id} value={store.id}>{store.display_name}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Run
-          <select value={selectedRun} onChange={(event) => setSelectedRun(event.target.value)}>
-            <option value="all">All runs</option>
-            {(data?.runs ?? []).map((run) => (
-              <option key={run.id} value={run.id}>{run.status} · {run.id.slice(0, 8)}</option>
-            ))}
-          </select>
-        </label>
-      </section>
+      <KpiCards kpis={data?.kpis} />
+
+      <StoreFilter
+        stores={data?.stores ?? []}
+        runs={data?.runs ?? []}
+        selectedStore={selectedStore}
+        selectedRun={selectedRun}
+        onStoreChange={setSelectedStore}
+        onRunChange={setSelectedRun}
+      />
 
       <section className="grid">
         <div className="panel table-panel">
           <h2>Normalized Records</h2>
-          <div className="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Store</th><th>Product</th><th>Qty</th><th>Price</th><th>Date</th><th>Signal</th><th>Notes</th>
-                </tr>
-              </thead>
-              <tbody>
-                {records.map((record) => (
-                  <tr key={record.id}>
-                    <td>{record.store_name}</td>
-                    <td>{record.product_name}</td>
-                    <td>{record.quantity}</td>
-                    <td>${Number(record.price).toFixed(2)}</td>
-                    <td>{record.sale_date}</td>
-                    <td><span className={`signal ${record.reorder_signal}`}>{record.reorder_signal}</span></td>
-                    <td>{record.quality_notes.join(", ") || "clean"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <RecordsTable records={records} />
         </div>
 
         <div className="panel timeline-panel">
           <h2>Workflow Events</h2>
-          <ol className="timeline">
-            {events.map((event) => (
-              <li key={event.id}>
-                <span className={event.status}>{event.status}</span>
-                <strong>{event.step_name}</strong>
-                <small>{event.event_type}</small>
-              </li>
-            ))}
-          </ol>
+          <EventsTimeline events={events} />
         </div>
       </section>
     </main>
