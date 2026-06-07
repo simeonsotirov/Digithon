@@ -21,8 +21,8 @@ const repoRoot = path.resolve(__dirname, "../../..");
 export async function runNormalizer(sourceFilename: string): Promise<NormalizedRecord[]> {
   return new Promise((resolve, reject) => {
     execFile(
-      "poetry",
-      ["run", "normalizer", "--input", sourceFilename],
+      "python",
+      ["-m", "poetry", "run", "normalizer", "--input", sourceFilename],
       {
         cwd: repoRoot,
         maxBuffer: 10 * 1024 * 1024,
