@@ -7,6 +7,8 @@ type Kpis = {
   quality_issue_count: number;
   reorder_count: number;
   stockout_count: number;
+  prediction_count: number;
+  recommended_reorder_quantity_total: number;
 };
 
 type Props = { kpis: Kpis | undefined; loading?: boolean };
@@ -17,11 +19,13 @@ const CARDS = [
   { label: "Quality fixes", key: "quality_issue_count" as const },
   { label: "Reorders", key: "reorder_count" as const },
   { label: "Stockouts", key: "stockout_count" as const },
+  { label: "Predictions", key: "prediction_count" as const },
+  { label: "Reco units", key: "recommended_reorder_quantity_total" as const },
 ];
 
 export function KpiCards({ kpis, loading }: Props) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 my-6">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4 my-6">
       {CARDS.map(({ label, key }) => (
         <Card key={key}>
           <CardContent className="pt-4">

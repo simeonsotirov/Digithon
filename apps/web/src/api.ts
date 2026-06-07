@@ -44,6 +44,40 @@ export type NormalizedRecord = {
   created_at: string;
 };
 
+export type CalendarEvent = {
+  id: string;
+  event_name: string;
+  event_type: "holiday" | "sports" | "shopping" | "seasonal" | "local_event";
+  starts_on: string;
+  ends_on: string;
+  country: string;
+  region: string | null;
+  city: string | null;
+  impact_scope: "national" | "regional" | "local";
+  impact_score: number;
+  product_tags: string[];
+  payload: Record<string, unknown>;
+  created_at: string;
+};
+
+export type InventoryPrediction = {
+  id: string;
+  run_id: string;
+  store_id: string;
+  store_name: string;
+  calendar_event_id: string;
+  event_name: string;
+  product_name: string;
+  baseline_quantity: number;
+  available_stock: number;
+  predicted_quantity: number;
+  uplift_multiplier: number;
+  recommended_reorder_quantity: number;
+  confidence: "low" | "medium" | "high";
+  reasons: string[];
+  created_at: string;
+};
+
 export type Dashboard = {
   kpis: {
     total_raw_rows: number;
@@ -51,10 +85,14 @@ export type Dashboard = {
     quality_issue_count: number;
     reorder_count: number;
     stockout_count: number;
+    prediction_count: number;
+    recommended_reorder_quantity_total: number;
   };
   runs: Run[];
   stores: Store[];
   records: NormalizedRecord[];
+  upcoming_events: CalendarEvent[];
+  predictions: InventoryPrediction[];
   events: Event[];
 };
 
@@ -77,6 +115,18 @@ export async function getRuns(): Promise<Run[]> {
 export async function getEvents(runId: string): Promise<Event[]> {
   const response = await fetch(`${apiBase}/events?run_id=${encodeURIComponent(runId)}`);
   if (!response.ok) throw new Error("Failed to load events");
+  return response.json();
+}
+
+export async function getCalendarEvents(): Promise<CalendarEvent[]> {
+  const response = await fetch(`${apiBase}/calendar-events`);
+  if (!response.ok) throw new Error("Failed to load calendar events");
+  return response.json();
+}
+
+export async function getPredictions(): Promise<InventoryPrediction[]> {
+  const response = await fetch(`${apiBase}/predictions`);
+  if (!response.ok) throw new Error("Failed to load predictions");
   return response.json();
 }
 

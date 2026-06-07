@@ -7,6 +7,7 @@ import { EventsTimeline } from "./components/EventsTimeline";
 import { IngestPanel } from "./components/IngestPanel";
 import { KpiCards } from "./components/KpiCards";
 import { LandingPage } from "./components/LandingPage";
+import { PredictionsTable } from "./components/PredictionsTable";
 import { RecordsTable } from "./components/RecordsTable";
 import { RunStatus } from "./components/RunStatus";
 import { StoreFilter } from "./components/StoreFilter";
@@ -25,6 +26,12 @@ function Dashboard() {
   const records = (data?.records ?? []).filter((record) => {
     const storeMatches = selectedStore === "all" || record.store_id === selectedStore;
     const runMatches = selectedRun === "all" || record.run_id === selectedRun;
+    return storeMatches && runMatches;
+  });
+
+  const predictions = (data?.predictions ?? []).filter((prediction) => {
+    const storeMatches = selectedStore === "all" || prediction.store_id === selectedStore;
+    const runMatches = selectedRun === "all" || prediction.run_id === selectedRun;
     return storeMatches && runMatches;
   });
 
@@ -74,6 +81,15 @@ function Dashboard() {
           onStoreChange={setSelectedStore}
           onRunChange={setSelectedRun}
         />
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Event-Aware Inventory Predictions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <PredictionsTable predictions={predictions} loading={loading} />
+          </CardContent>
+        </Card>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.7fr_0.8fr] gap-6">
           <Card>

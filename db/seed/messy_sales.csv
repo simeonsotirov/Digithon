@@ -1,7 +1,776 @@
-store,product,quantity,price,sale_date
-Downtown Store,Coffee-Beans,18,$12.99,2026-06-01
-DT,coffee bean,4,"13,49",06/02/2026
-North Side,oatmilk,0,$4.20,2026/06/03
-south shop,Tea,7,USD 6.50,Jun 04 2026
-DTWN,espresso pod,5,$9.99,04/06/2026
-North,coffee beans,-2,bad-price,not-a-date
+store,product,quantity_sold,current_stock,missing_stock,damaged_stock,expired_stock,price,sale_date,expiry_date,supplier,category,event_hint
+North Side,Notebook,6,34,2,1,2,$3.30,05-Jun-2026,22-Aug-2026,Metro Wholesale,stationery,
+eastside,lunch sandwich,4,16,5,0,0,$6.92,2026-04-16,Jun 06 2026,FreshLine Supply,lunch items,
+South Shop,notebooks,6,34,2,0,0,$3.29,2026-07-20,2027/01/22,Urban Goods Co,stationery,
+Airport-Kiosk,Lunch Box,7,2,0,0,0,$9.24,May 21 2026,07-Oct-2026,FreshLine Supply,lunch items,
+northside,lunch sandwich,7,23,0,0,0,$7.16,20-Sep-2026,28-Jan-2027,Northstar Foods,lunch items,
+West Market,sandwich pack,8,3,0,2,0,USD 7.04,2026/05/24,08/24/2026,Northstar Foods,lunch items,
+east,energy can,17,26,3 units,2,0,$3.29,2026/03/22,06/01/2027,QuickMart Distribution,beverages,
+south shop,PENCILS,5,34,0,0,0,$2.09,06/08/2026,Mar 19 2027,Metro Wholesale,stationery,
+south,tea bag,9,24 units,0,0,0,$7.21,03/23/2026,21/08/2026,Urban Goods Co,tea,March Madness
+northside,school notebook,7,35,0 units,0,0,USD 3.10,2026-06-16,08/04/2026,FreshLine Supply,stationery,
+westside,nacho chips,8,0,0,0 units,2,$3.47,2026-09-21,2027-01-02,Metro Wholesale,chips,
+Southside,whole milk,15,26 units,0,0,0,USD 4.06,2026/06/24,Nov 21 2026,Urban Goods Co,groceries,Summer travel season
+DTWN,coca cola 500ml,26,35,0,0,0,$1.86,09/10/2026,04/09/2027,QuickMart Distribution,soda,NFL kickoff
+airport,Pencil,13,35,2,0 units,0 units,USD 2.13,06-Apr-2026,2027-01-30,Urban Goods Co,stationery,
+northside,Pop Corn,13,35,0,0,1,$2.29,2026/04/06,Jul 01 2026,Northstar Foods,snacks,
+South Shop,school notebook,7,27,0,0,0,"3,25",2026/03/25,07/31/2026,Metro Wholesale,stationery,
+westside,12 eggs,3,12,0,0,0,$4.93,15/06/2026,08/18/2026,Metro Wholesale,groceries,
+West Market,popcorn bag,13,30,3,0,0,USD 2.66,08/09/2026,Dec 21 2026,Metro Wholesale,SNACKS,
+Southside,school notebook,6,27,0,0,0,$2.89,2026/07/29,11/23/2026,QuickMart Distribution,stationery,
+East Corner,snack bars,13,12,0,0,0,$5.37,2026/07/09,21/03/2027,FreshLine Supply,lunch items,Summer travel season
+North,crisps,18,35,0,0,0,$3.16,19-Jul-2026,16/12/2026,Urban Goods Co,chips,Summer travel season
+Southside,Chocolate Bars,16,30,0,0,0,$1.87,02-Mar-2026,05/11/2026,Urban Goods Co,candy,
+Downtown Store,tea-bags,9,missing,0,0,0,$6.89,30/04/2026,08/21/2026,FreshLine Supply,tea,
+terminal shop,Milk,13,20,0,0,0,$4.19,2026/04/11,15/11/2026,Urban Goods Co,groceries,
+North,popcorn,missing,24,0,0 units,0,"2,70",09/28/2026,2026-11-20,Metro Wholesale,SNACKS,
+East Corner,Pretzels,9,15,0,0,0,$2.61,Sep 10 2026,2027/04/04,Urban Goods Co,snacks,
+south,H2O bottle,23,55,0,0,0,$1.49,09-Mar-2026,not-a-date,FreshLine Supply,beverages,
+westside,lunch sandwich,10,17,2,0,0,$7.79,23/09/2026,11-Apr-2027,Urban Goods Co,lunch items,
+west,pepsi 500 ml,16,45,0,0,0,$1.92,2026-05-11,2026-11-29,Metro Wholesale,soda,
+Southside,seltzer,9,29,0,0,0 units,$2.18,25/07/2026,2027-04-22,Northstar Foods,beverages,
+Downtown Store,coca cola 500ml,24,35 units,2,0,0,$1.91,18/06/2026,2026/10/07,FreshLine Supply,soda,Father's Day
+East-Corner,Spark Water,14,31,0,0,0,$2.36,Oct 03 2026,Feb 16 2027,Northstar Foods,BEVERAGES,
+East Corner,FrozenPizza,9,6,0,0,0,$8.31,26-Sep-2026,Apr 15 2027,QuickMart Distribution,frozen,
+northside,energy-drink,8,20,0,0,1,USD 3.61,2026-06-03,2026/09/09,Urban Goods Co,beverages,
+east,milk 1L,12,29,0,0,0,"3,94",2026-08-18,2027-01-12,QuickMart Distribution,groceries,Back-to-school season
+Southside,coffee bean,12,30,0,0,0,$14.23,06/04/2026,13/07/2026,Urban Goods Co,coffee,March Madness
+East Corner,choc bars,13,40,0,0,0,"1,81",05/05/2026,Oct 20 2026,Urban Goods Co,candy,Cinco de Mayo
+Southside,Chocolate Bars,16,30,0,0,0,$1.87,02-Mar-2026,05/11/2026,Urban Goods Co,candy,
+E Corner,breakfast cereal,6,22,2,0,0,$5.61,10/09/2026,Nov 30 2026,Urban Goods Co,groceries,
+Airport Kiosk,pepsi bottle,23 units,43,0,0,0,"1,89",27-May-2026,Aug 16 2026,Metro Wholesale,SODA,Graduation season
+E Corner,bread loaf,8,21,0 units,0 units,0,$3.63,Aug 10 2026,31/01/2027,QuickMart Distribution,groceries,
+AIR,chocolate,16,39,0 units,0,0,$1.91,Jul 09 2026,24/08/2026,Metro Wholesale,candy,Summer travel season
+West-Market,tortilla-chip,11,45,0,1,0,$3.45,08-Mar-2026,2026/06/23,FreshLine Supply,chips,
+terminal shop,frozen-pizza,-6,9,0,0,0,$8.04,29/06/2026,02/06/2027,Northstar Foods,frozen,Summer travel season
+north shop,ESP pods,13,26,0,0,0,$10.36,2026-04-06,16/05/2026,FreshLine Supply,coffee,March Madness
+DTWN,school pencils,7 units,19,0,0,0,$2.16,08/19/2026,2026/12/25,QuickMart Distribution,stationery,
+airport,bread loaf,11,8,0,0,0,"3,80",2026-05-04,2026/08/16,QuickMart Distribution,groceries,
+airport,coffee_beans,13 units,29,5 units,0,0,$12.95,14/08/2026,09/24/2026,Metro Wholesale,coffee,Back-to-school season
+East-Corner,gift-card,6,0,0,1,0,"27,07",2026/03/14,2026/06/26,FreshLine Supply,gifts,
+east,seasonal-mugs,8,18,0,0,0,USD 8.58,23/03/2026,Sep 03 2026,Urban Goods Co,seasonal items,
+Downtown Store,Potato Chips,14,52,0,0,0,$3.33,2026-05-13,2026-09-16,Urban Goods Co,chips,
+AIR,snack bars,5,13,0,0,0,USD 5.20,04/30/2026,2026-12-06,Urban Goods Co,lunch items,
+North Side,GiftCard,2,4,0,0,1,$25.94,2026/06/13,31/12/2026,FreshLine Supply,gifts,
+westside,12 eggs,8,21,0,0,0,$4.34,29-Jun-2026,14-Apr-2027,FreshLine Supply,groceries,
+East-Corner,coffee bean,6,27,3,1,0,$13.09,08-Apr-2026,13-Sep-2026,FreshLine Supply,coffee,
+south,Gift Cards,3,10,0,0,0,$27.44,2026/09/16,15-Jun-2027,Northstar Foods,gifts,
+Downtown Store,Pretzels,8,24,0,0,0,$2.63,Sep 24 2026,Jul 15 2027,QuickMart Distribution,snacks,
+eastside,school pencils,8,24,0,0,0,USD 2.18,2026-04-18,30/06/2026,Northstar Foods,stationery,
+downtown,frozen-fries,4,17,0,0,0,$5.34,2026/09/14,Jan 09 2027,Urban Goods Co,frozen,
+South Shop,H2O bottle,24,43,0,0,0,$1.51,05/05/2026,11/25/2026,Metro Wholesale,beverages,Cinco de Mayo
+E Corner,pizza frozen,4,14,0,0,0,USD 7.65,Sep 29 2026,2027/04/12,Metro Wholesale,frozen,
+eastside,gift-card,2,7,0,0,0 units,"26,06",Aug 12 2026,Dec 25 2026,QuickMart Distribution,gifts,
+DT,Paper Cups,3,14 units,0,0,0,$6.26,2026-08-19,Jan 23 2027,QuickMart Distribution,checkout supplies,
+terminal shop,Candy,10,22,0 units,0,0,"3,70",Jul 12 2026,2026-09-23,Urban Goods Co,candy,Summer travel season
+E Corner,Tea,6,22,0,0,2,USD 6.20,29/05/2026,2026/08/19,QuickMart Distribution,tea,Graduation season
+W Market,popcorn bag,13,23,0,0 units,0 units,$2.32,2026-06-07,2027-03-10,QuickMart Distribution,snacks,
+E Corner,granola-bars,8,16,0,0,0,$4.60,08/14/2026,19-Nov-2026,FreshLine Supply,lunch items,Back-to-school season
+westside,sparkling-water,11,17,0,0,0,"2,37",2026/04/18,08-Jun-2026,QuickMart Distribution,beverages,
+W Market,mugs seasonal,6,21,0,0,0 units,$10.06,08/10/2026,Feb 19 2027,FreshLine Supply,seasonal items,
+airport,Bottled Water,missing,-42,0 units,2,0,$1.50,21-Mar-2026,May 18 2026,Metro Wholesale,beverages,March Madness
+W Market,store gift card,2,24,0,0 units,0,USD 25.34,15-Jun-2026,Sep 21 2026,FreshLine Supply,gifts,
+North Side,COFFEE beans,12 units,13,0,0,0,$13.27,2026/10/03,2027/01/23,Urban Goods Co,coffee,
+south shop,EnergyDrink,10,27,0,0,0,USD 3.86,2026/08/29,2027-03-03,QuickMart Distribution,beverages,
+airport,PEPSI .5L,24,45,0,0,0,$1.76,Mar 25 2026,18-Oct-2026,Northstar Foods,soda,March Madness
+S-Shop,note-books,4,31,2,0,3,$3.19,07/24/2026,2027-03-29,Metro Wholesale,stationery,
+North,energy can,12,21,0,0,0,USD 3.52,03/13/2026,May 31 2026,FreshLine Supply,beverages,
+E Corner,Milk,14,7,0,0,0,"4,40",13-Mar-2026,2026/06/11,Urban Goods Co,groceries,
+North Side,CEREAL,7 units,8,0,0,0,"6,05",10/09/2026,2026-10-12,Metro Wholesale,groceries,
+airport,choc bars,9,41 units,0,0,0,$2.00,09/29/2026,May 21 2027,QuickMart Distribution,candy,
+south shop,cups paper,7,17,0 units,0,0,"5,91",2026-03-23,2026/07/12,QuickMart Distribution,checkout supplies,
+downtown,chips,20,28,0,0,0,$3.19,17/08/2026,20/12/2026,QuickMart Distribution,chips,Back-to-school season
+AIR,Spark Water,10,29,0,0,0,$2.18,Aug 27 2026,03/14/2027,FreshLine Supply,beverages,
+east,PENCILS,9,40,0,0,0,"2,09",07/03/2026,11/26/2026,Metro Wholesale,stationery,
+North Side,oat milk,3 units,29,0,0,0,$4.44,2026/04/08,2026/06/28,Northstar Foods,groceries,
+South Shop,pretzel bag,4,35,0,0,0,$2.87,May 26 2026,14-Jan-2027,QuickMart Distribution,snacks,
+West-Market,nacho chips,16,34,2,0,0,$3.37,2026/03/27,2026-08-18,Urban Goods Co,chips,March Madness
+North,BREAD,10,24,0 units,1,1,"3,36",2026/08/15,2027/01/26,Urban Goods Co,groceries,
+Airport Kiosk,fries frozen,5,12,0,4,2,$4.64,08/05/2026,18/03/2027,Metro Wholesale,frozen,
+westside,Sandwich Packs,7,20,0,0,0,"7,83",11/06/2026,2027/01/17,Metro Wholesale,lunch items,Summer travel season
+NORTH_SIDE,Oat-Milk,12,9,0,0,0,$3.93,22-Aug-2026,Aug 09 2026,FreshLine Supply,groceries,Back-to-school season
+east,potato-chip,22,39,0 units,0,0,$3.04,Aug 01 2026,07-Sep-2026,Metro Wholesale,chips,Back-to-school season
+northside,Pop Corn,8 units,22,0,0 units,0,$2.53,05/31/2026,not-a-date,Northstar Foods,snacks,
+NORTH_SIDE,egg dozen,9,20,0,0,0,$4.87,2026-08-30,17-Oct-2026,Metro Wholesale,GROCERIES,
+E Corner,Lunch Box,2 units,28,0,0,0,$9.68,03/27/2026,09/09/2026,Northstar Foods,lunch items,
+W Market,Cereal,5,16,0,0,0,"5,70",2026/07/03,2026-10-25,Metro Wholesale,groceries,
+DTWN,mugs seasonal,-8,20,0,0,0,$9.01,09/03/2026,09/10/2026,FreshLine Supply,seasonal items,
+eastside,coca cola 500ml,22,42,0,0,0,$2.02,Aug 26 2026,05/11/2026,QuickMart Distribution,soda,Back-to-school season
+east,frozen-fries,4,30,1,0,0,$5.34,07/27/2026,10/20/2026,FreshLine Supply,frozen,
+downtown,Bread,8,10,0,0,0,"3,22",2026-03-31,2026/09/08,Metro Wholesale,groceries,
+South Shop,Candy Packs,missing,30,0,0,0,$3.98,2026/04/22,02/01/2027,Urban Goods Co,candy,
+south shop,Tortilla Chips,16 units,21,0,0,0,$3.34,08-Jul-2026,10/25/2026,QuickMart Distribution,chips,Summer travel season
+South Shop,Granola Bars,8,20,0,0,0,USD 5.18,2026/07/06,23-Nov-2026,Urban Goods Co,lunch items,Summer travel season
+North,white bread,9,17,0,0,0,$3.36,09/28/2026,Feb 02 2027,Northstar Foods,groceries,
+south,frozen-fries,10,7,0,0,0,$5.50,May 08 2026,08/10/2026,FreshLine Supply,frozen,
+east,Pencil,6,41,0,0,0,$2.03,09/24/2026,2027/04/29,FreshLine Supply,stationery,
+AIR,Pop Corn,12,14,0,0,0,$2.55,17-Mar-2026,11/15/2026,Urban Goods Co,snacks,
+Southside,PRETZELS,4,25,0,0,2,USD 2.67,17-Aug-2026,25/01/2027,FreshLine Supply,snacks,
+Downtown-01,lunch sandwich,9,21,0,0,0,$7.81,Oct 03 2026,2027-02-19,Metro Wholesale,lunch items,
+eastside,coca cola 500ml,23 units,54,0,0,0 units,$1.93,09/03/2026,2026/04/14,Northstar Foods,soda,
+Southside,breakfast cereal,7 units,19,0,0,2 units,$5.29,09/22/2026,2027/02/27,QuickMart Distribution,groceries,
+northside,paper bags,32,77,0,1,0,$0.22,15-Mar-2026,Jun 22 2026,QuickMart Distribution,checkout supplies,
+AIR,crisps,24,22,0,0,0,$2.93,2026-08-15,2027/02/26,FreshLine Supply,chips,Back-to-school season
+westside,Chocolate Bars,14,41,0,0,0,"1,93",Jun 22 2026,2027/02/20,FreshLine Supply,candy,Summer travel season
+north shop,Oat-Milk,8,10,0,0,0,$3.98,May 18 2026,09/15/2026,Northstar Foods,groceries,Graduation season
+terminal shop,school lunchbox,1,0,0,2,0,$10.64,06/06/2026,12/08/2026,Urban Goods Co,lunch items,
+DTWN,egg dozen,7,12,0,0,0,$4.27,21-Aug-2026,05/31/2027,Metro Wholesale,groceries,
+DTWN,Pepsi500,16,43,0,0,0,"1,79",22/09/2026,2027-06-20,FreshLine Supply,soda,
+Airport-Kiosk,EnergyDrink,12,36,0,0,0,"3,45",2026-04-30,17/10/2026,Metro Wholesale,beverages,
+downtown,Pencil,13,missing,0,0,0,$2.02,Apr 10 2026,19/07/2026,QuickMart Distribution,stationery,
+westside,OATMILK 1L,7,12,0,0,0 units,"4,47",2026/06/24,19-Feb-2027,Northstar Foods,groceries,Summer travel season
+AIR,popcorn bag,8,0,0,0,1,$2.45,02-Jun-2026,03/02/2027,QuickMart Distribution,snacks,
+NORTH_SIDE,white bread,9,12,0,0 units,0,"3,63",29-Sep-2026,2026/12/30,Urban Goods Co,groceries,
+Downtown-01,chips,13,29,0,0,0,$2.77,04/10/2026,11/07/2027,FreshLine Supply,chips,
+east,OATMILK 1L,13,10,0,0,0,USD 4.31,2026-03-29,2026/08/27,Northstar Foods,groceries,March Madness
+East Corner,candy-pack,18,19,0,0,0,$4.08,03/21/2026,Sep 25 2026,QuickMart Distribution,candy,March Madness
+airport,pencils,9,36,0,0,0,$2.03,2026-10-11,Nov 22 2026,QuickMart Distribution,stationery,
+Airport Kiosk,checkout cups,2,0,0,0,0,$5.71,09/25/2026,2027-03-03,Urban Goods Co,checkout supplies,
+DTWN,water bottle,27 units,56,0,0,0,$1.45,28-May-2026,Aug 09 2026,Metro Wholesale,BEVERAGES,Graduation season
+south shop,Candy Packs,7,23,0,0,0,$4.13,Sep 17 2026,17/11/2026,Northstar Foods,candy,
+DTWN,granola-bars,16,21,0,0,0,"5,58",08/23/2026,11-Jan-2027,Urban Goods Co,lunch items,Back-to-school season
+south shop,nacho chips,19 units,38,0,0,0 units,USD 3.33,2026-07-03,31-Mar-2027,Northstar Foods,chips,Independence Day
+northside,white bread,14,16,0,0,0,$3.83,25-Sep-2026,01/27/2027,FreshLine Supply,groceries,
+northside,coca cola 500ml,22,40,5,2,0,$2.04,Jun 12 2026,Feb 14 2027,QuickMart Distribution,soda,Graduation season
+Downtown-01,candy-pack,12,26,0,0 units,0,$4.41,2026-06-08,2027-02-23,Urban Goods Co,candy,Graduation season
+airport,Lunch Box,4 units,0,0,4,0,USD 9.94,09-May-2026,2026/11/29,QuickMart Distribution,lunch items,
+DT,milk 1L,12,15,0,0,0,$3.99,2026/09/15,Mar 26 2027,Metro Wholesale,groceries,Back-to-school season
+E Corner,granola,11,14,0,0,0,"5,07",2026-07-20,05-Feb-2027,QuickMart Distribution,lunch items,Summer travel season
+south shop,Tortilla Chips,16 units,21,0,0,0,$3.34,08-Jul-2026,10/25/2026,QuickMart Distribution,chips,Summer travel season
+DT,cereal box,3,11,5,2,0,$5.84,Jun 11 2026,2027-02-22,Urban Goods Co,groceries,
+S-Shop,Pretzels,9,missing,0,0,3,"2,81",02-May-2026,2026-12-31,Northstar Foods,snacks,
+north shop,granola-bars,7,29,0,0,0,$5.14,10/03/2026,2026/12/20,Metro Wholesale,lunch items,
+W Market,popcorn bag,10,29,0,0,0,$2.71,01/05/2026,2026-08-21,Metro Wholesale,SNACKS,
+airport,CEREAL,10,20,0,0,0,$5.90,Sep 12 2026,2027/01/31,FreshLine Supply,groceries,
+south,tortilla-chip,13,26,0,0,0,$3.11,2026/05/29,2027/02/24,FreshLine Supply,chips,Graduation season
+South Shop,Candy Packs,missing,30,0,0,0,$3.98,2026/04/22,02/01/2027,Urban Goods Co,candy,
+north shop,candy bar,13,43,0,0,0,USD 1.76,16-Jul-2026,18-Feb-2027,QuickMart Distribution,candy,Summer travel season
+north shop,energy can,9,32,0,0,0 units,$3.87,2026-03-24,2026/07/12,QuickMart Distribution,beverages,
+eastside,bags checkout,34 units,57,2,0,0 units,$0.21,26-Jul-2026,2027-02-04,Urban Goods Co,checkout supplies,
+NORTH_SIDE,OATMILK 1L,11,7,1,0,0,$4.17,16-May-2026,2026-12-16,Metro Wholesale,groceries,Graduation season
+S-Shop,BREAD,5,33,0,0,0,$3.70,09/24/2026,18-Dec-2026,QuickMart Distribution,groceries,
+eastside,energy can,15,22,0,0,0,$3.56,03-Mar-2026,2026/05/25,QuickMart Distribution,beverages,
+West Market,water bottle,26,56,0,0,0,USD 1.63,10-Jul-2026,2026/09/29,QuickMart Distribution,beverages,Summer travel season
+north shop,Oat-Milk,11,6,0,0,0,$4.16,2026/06/19,04-Sep-2026,Metro Wholesale,groceries,Father's Day
+northside,espresso-pods,10,11,0 units,0,0,$10.95,16/09/2026,31-Mar-2027,Metro Wholesale,coffee,
+NORTH_SIDE,Pepsi500,20,32 units,0,0,0,$2.10,Apr 13 2026,2026/05/31,Metro Wholesale,soda,
+East-Corner,sparkling h2o,8 units,36,0,0,0,"2,33",30-Jun-2026,11/06/2026,Northstar Foods,beverages,
+terminal shop,Paper Cups,7,13,0 units,1,0,$6.35,08/09/2026,2026-10-23,Northstar Foods,CHECKOUT-SUPPLIES,
+E Corner,lunch boxes,2,0,2,0,0,$10.11,20-Sep-2026,05/04/2027,Northstar Foods,lunch items,
+DT,sandwich,3,24,0,0,0,$7.03,Mar 13 2026,2026-10-28,Metro Wholesale,lunch items,
+S-Shop,ESP pods,10,33,0,0,0,$10.04,17/06/2026,Apr 07 2027,Northstar Foods,coffee,Summer travel season
+south,Chocolate Bars,19,20,0,0,0,$1.77,2026-05-18,Jun 19 2026,Northstar Foods,candy,Graduation season
+south,OATMILK 1L,8,25,0,0,0,$4.17,17/07/2026,2027-05-03,QuickMart Distribution,groceries,Summer travel season
+terminal shop,Candy Packs,10,24,2,2,0,$3.85,05/12/2026,07/02/2026,Northstar Foods,candy,
+west,sandwich pack,4,13,0,0,0,$6.62,2026-03-15,Mar 14 2026,Northstar Foods,lunch items,
+Airport-Kiosk,frozen-fries,8,9,0 units,0,0,$5.31,09/29/2026,2027-07-17,Metro Wholesale,frozen,
+NORTH_SIDE,school lunchbox,2 units,13,0,0,0,$10.92,06/30/2026,11/04/2027,QuickMart Distribution,lunch items,
+east,candy-pack,18,15,0,0 units,0,$3.68,08/20/2026,26/05/2027,QuickMart Distribution,candy,Back-to-school season
+NORTH_SIDE,nacho chips,11,45,0,0,0,$3.29,2026-10-12,19/11/2026,FreshLine Supply,chips,
+Airport Kiosk,OATMILK 1L,8,24,0,0,0,$4.64,10/06/2026,2026/11/06,QuickMart Distribution,groceries,
+Downtown-01,ESP pods,8,19,0,0 units,0,$9.54,25-Sep-2026,2027/06/16,Urban Goods Co,coffee,
+AIR,H2O bottle,16,45,0,0 units,0,bad-price,2026-09-17,05/10/2027,Urban Goods Co,beverages,
+eastside,seltzer,11,39,0,0,2,USD 2.43,2026-07-14,Feb 15 2027,QuickMart Distribution,beverages,
+Downtown-01,nacho chips,missing,33,2,0 units,0 units,$3.68,Oct 08 2026,15/05/2027,Northstar Foods,chips,
+AIR,oat milk,-7,16,3 units,0,0,$4.62,2026-07-02,21/02/2027,QuickMart Distribution,groceries,Independence Day
+Airport Kiosk,energy can,11,36,0,0,0,"3,48",Sep 10 2026,Feb 06 2027,FreshLine Supply,beverages,
+Airport-Kiosk,Coke .5L,26,48,0,0,0,"1,99",25/05/2026,09/17/2026,FreshLine Supply,soda,Graduation season
+Southside,Coke .5L,16,46,3,0,0,USD 2.10,28-Sep-2026,2027/07/14,Urban Goods Co,soda,
+West Market,sandwich pack,8,3,0,2,0,USD 7.04,2026/05/24,08/24/2026,Northstar Foods,lunch items,
+westside,Spark Water,12 units,23,0,0,0,"2,52",10/15/2026,21/07/2027,FreshLine Supply,BEVERAGES,
+northside,Cereal,6,17,0,0,0,$6.05,2026/08/24,02/10/2026,QuickMart Distribution,groceries,
+Southside,Tea,9 units,19,0,0,0,$6.94,01/05/2026,26-Sep-2026,Northstar Foods,tea,
+Downtown Store,CocaCola500,18,60,0,0,0,"1,95",02/03/2026,07/25/2026,QuickMart Distribution,soda,
+DT,Tortilla Chips,15,32,0,0,3,$3.36,Oct 04 2026,Dec 27 2026,FreshLine Supply,chips,
+S-Shop,mugs seasonal,0,-21,0,0,0,"9,25",07-Oct-2026,02/28/2027,QuickMart Distribution,seasonal items,
+south shop,fries frozen,8,15,0,0,0,$4.75,05/19/2026,02/16/2027,FreshLine Supply,frozen,
+airport,POP-CORN,5,32,0,0,0,$2.70,07/14/2026,19/03/2027,Metro Wholesale,snacks,
+East-Corner,frozen-fries,5,19,0,0,0 units,USD 5.36,2026-04-16,Jan 24 2027,FreshLine Supply,frozen,
+north shop,tea bag,6,12,0,0,0,USD 6.94,11/10/2026,10/16/2026,Metro Wholesale,tea,
+northside,seasonal-mugs,7,23,0,0,3,$9.01,Apr 21 2026,Nov 09 2026,FreshLine Supply,seasonal items,
+NORTH_SIDE,PENCILS,7,41,0,0,2 units,$1.97,2026-06-24,2026/09/21,Northstar Foods,stationery,
+West-Market,Coke .5L,32,30,0,0,0,$1.86,04/06/2026,2026/07/15,QuickMart Distribution,soda,March Madness
+East Corner,Coke .5L,19 units,42,0 units,0,0,$2.09,25-Jun-2026,04/10/2027,Metro Wholesale,soda,Summer travel season
+terminal shop,coffee_beans,16,22,0,0,0,$14.40,2026/06/05,2027-01-13,QuickMart Distribution,coffee,National Donut Day
+westside,Eggs,10,4,0,0,0,USD 4.65,13-Jun-2026,10/03/2027,Urban Goods Co,groceries,
+West-Market,PRETZELS,-12,18,0,0,0,USD 3.00,2026-08-08,2027-02-23,QuickMart Distribution,SNACKS,
+Airport Kiosk,seasonal-mugs,7,7,0,0,0 units,USD 8.41,2026-07-24,29-Mar-2027,Urban Goods Co,seasonal items,
+S-Shop,Eggs,8,19,0,0,0,USD 4.80,08-May-2026,26/10/2026,FreshLine Supply,groceries,
+DTWN,paper-cups,7,19,0,0,0,$5.98,May 17 2026,Sep 18 2026,FreshLine Supply,checkout supplies,
+DTWN,Eggs,4,13,0,0,0,$4.34,2026-03-25,2026/09/14,Metro Wholesale,groceries,
+North,water 500ml,31,31,0,0 units,2,$1.38,03-Jul-2026,2026/09/02,Urban Goods Co,beverages,Independence Day
+north shop,energy can,7,45,0,0,0,$3.84,03/30/2026,2026/06/15,Northstar Foods,beverages,
+East Corner,choc bars,18,16,0,0,0,"1,82",30-Jul-2026,2027/02/23,QuickMart Distribution,candy,Summer travel season
+NORTH_SIDE,Tortilla Chips,13,41,0,0,0,$3.60,07/28/2026,21-Nov-2026,FreshLine Supply,chips,Summer travel season
+DTWN,seltzer,11,33,0,0,3,USD 2.12,Jul 16 2026,2027-02-02,Metro Wholesale,beverages,
+westside,snack bars,9 units,16 units,5,0,3,$5.11,2026/09/13,22-Jan-2027,FreshLine Supply,lunch items,Back-to-school season
+AIR,Eggs,8,29 units,1,0,0,$4.35,09/15/2026,May 28 2027,FreshLine Supply,groceries,
+North,Candy,12,14,0,0,0,$3.68,08/06/2026,2027/02/22,Metro Wholesale,candy,Graduation season
+E Corner,white bread,10,14,0,0,0,$3.40,2026/04/26,18-Jun-2026,FreshLine Supply,groceries,
+North Side,Pretzels,7,36,5,0,0,$3.01,Apr 12 2026,Dec 22 2026,FreshLine Supply,snacks,
+eastside,Seasonal Mug,7,17,0,0 units,0,"9,93",2026-09-05,May 25 2027,QuickMart Distribution,seasonal items,
+Downtown-01,Seasonal Mug,8,17,0,0,0,"9,67",2026/08/05,29-Mar-2027,QuickMart Distribution,seasonal items,
+Downtown-01,Bottled Water,28,39,0,0,0,$1.39,06-Jun-2026,10-Nov-2026,FreshLine Supply,BEVERAGES,Graduation season
+south shop,milk 1L,7,21,0 units,0,0,$4.17,04/20/2026,not-a-date,QuickMart Distribution,groceries,
+north shop,school pencils,9,23,0,0,0,$1.85,09/02/2026,Jan 02 2027,Metro Wholesale,stationery,
+South Shop,Eggs,11,26,0,0,0,$4.26,not-a-date,2027-05-30,Northstar Foods,groceries,
+terminal shop,Pop Corn,8,33,0,0,0,$2.39,2026-09-09,20-Jun-2027,Northstar Foods,snacks,
+DT,sweet packs,18 units,18,0,0,0,$4.12,2026/08/24,14-May-2027,Metro Wholesale,candy,Back-to-school season
+North,Tortilla Chips,12 units,23,0,0,0,$3.63,Aug 06 2026,2027/01/25,QuickMart Distribution,chips,Back-to-school season
+E Corner,Bread,11 units,11,0,0,0,$3.26,01/07/2026,10-Oct-2026,Northstar Foods,groceries,
+East Corner,holiday mug,1,8,0,0,3,$9.17,Aug 30 2026,Sep 29 2026,Urban Goods Co,seasonal items,
+South Shop,sandwich pack,6,17,0,0,0,$7.12,2026/03/15,Nov 08 2026,Metro Wholesale,lunch items,
+East-Corner,Oat-Milk,5,30,0,0 units,0,$4.61,10-Oct-2026,2026/12/26,Northstar Foods,groceries,
+West-Market,CEREAL,4,7 units,0 units,0,0,$5.91,10-May-2026,Oct 02 2026,Metro Wholesale,groceries,
+eastside,EnergyDrink,10 units,27 units,0,0,0,$3.56,Aug 05 2026,2027/02/16,FreshLine Supply,beverages,
+Downtown Store,whole milk,12 units,15 units,0,0,0,USD 4.47,2026-08-27,2027-01-04,Northstar Foods,groceries,Back-to-school season
+airport,energy can,16,34,0,0,0,$3.50,Jun 21 2026,2026-08-02,QuickMart Distribution,beverages,
+terminal shop,bread loaf,5,14,0,0,0,$3.47,21/09/2026,2027-03-06,Northstar Foods,groceries,
+Airport-Kiosk,energy can,7,29,0,0,0,$3.76,Jul 12 2026,2027-03-09,Urban Goods Co,beverages,
+South Shop,notebooks,5,36,0,0,0,$2.95,Jun 18 2026,Jan 11 2027,Urban Goods Co,stationery,
+north shop,candy-pack,7,31,0,0,0,$4.43,2026/03/11,2026/10/23,QuickMart Distribution,candy,
+north shop,Eggs,9,7,0,0,0,$4.75,21-Jul-2026,29-Mar-2027,QuickMart Distribution,groceries,
+West-Market,Coffee-Beans,15,32,1,0,0 units,USD 12.01,2026-09-08,2027-05-24,QuickMart Distribution,coffee,NFL kickoff
+south,store gift card,1,17,0 units,0,0,$24.29,Jul 31 2026,2026/11/25,QuickMart Distribution,gifts,
+DTWN,freezer fries,9,14,0,0,0,$5.53,17-Apr-2026,09/25/2026,QuickMart Distribution,frozen,
+northside,tort chips,10 units,48,0,0,0,$3.08,2026-09-17,22-Mar-2027,QuickMart Distribution,chips,
+West-Market,water bottle,23,40,0,0,0,$1.45,18/04/2026,Sep 02 2026,Northstar Foods,beverages,
+Airport Kiosk,sparkling-water,13,32,0,0,1,"2,47",06/06/2026,08/10/2026,Northstar Foods,beverages,
+AIR,sweet packs,11,39 units,5,0,0,USD 3.85,2026/05/31,Oct 13 2026,Northstar Foods,candy,Graduation season
+northside,MILK,10,18,0,0,0,$4.23,Jun 02 2026,26/09/2026,QuickMart Distribution,groceries,Graduation season
+Downtown Store,pepsi 500 ml,27,22,2,0,0,$2.06,23/03/2026,12/03/2026,FreshLine Supply,soda,March Madness
+North Side,candy bar,17,16,3 units,2 units,0,"1,97",07/01/2026,12/09/2026,Metro Wholesale,candy,Independence Day
+west,choc bars,9,31,0,0,0,USD 2.00,17/04/2026,10/28/2026,FreshLine Supply,candy,
+terminal shop,granola-bars,missing,10,0,0,0,$4.94,2026/09/09,06-Mar-2027,Metro Wholesale,lunch items,NFL kickoff
+S-Shop,pepsi 500 ml,23,25,0,0,0,$1.94,01/09/2026,2027/05/28,QuickMart Distribution,soda,Back-to-school season
+Airport Kiosk,Espresso Pods,8,36,0,0 units,0,USD 9.37,Aug 31 2026,2027-05-29,Northstar Foods,coffee,Back-to-school season
+west,H2O bottle,27,51,0,0,0,USD 1.48,2026-07-08,02/18/2027,Urban Goods Co,beverages,Summer travel season
+East Corner,Tortilla Chips,9,43,0 units,0,0,$3.50,2026-04-24,Feb 04 2027,FreshLine Supply,chips,
+DTWN,Notebook,4,31,0,0,0 units,$3.28,2026-08-02,16-Mar-2027,Urban Goods Co,stationery,
+south,Sandwich Packs,10,15,0,0,0,"7,06",19-Apr-2026,Oct 29 2026,Northstar Foods,lunch items,
+West Market,tortilla-chip,18,0,0,2,0,USD 3.62,Jun 28 2026,03-Nov-2026,Northstar Foods,chips,Summer travel season
+eastside,energy-drink,9 units,31,0,0,0,USD 3.91,06/07/2026,2027/01/18,FreshLine Supply,beverages,
+North,coke bottle,25,42,0,0,0,$1.96,not-a-date,19-Mar-2027,Urban Goods Co,soda,Summer travel season
+eastside,water bottle,36,47,0,0,0 units,$1.42,04/02/2026,2026-06-11,QuickMart Distribution,beverages,March Madness
+Downtown-01,tea bag,13,9,0,0,0,$6.28,05/26/2026,Jul 27 2026,Metro Wholesale,tea,Graduation season
+east,BREAD,9,33,0 units,0,0,$3.63,21-Sep-2026,16/04/2027,FreshLine Supply,groceries,
+S-Shop,lunch-box,4,20,0,0,0,$9.44,29/03/2026,16-Jul-2026,QuickMart Distribution,lunch items,
+West-Market,GiftCard,4,11,0,0,0,$24.75,2026-07-14,2027/01/21,Urban Goods Co,gifts,
+W Market,school notebook,9,13,0,0,0,$3.22,02-Jun-2026,02-Jan-2027,FreshLine Supply,stationery,
+South Shop,school pencils,7 units,0,2,0,1,$1.88,03/18/2026,2026/07/13,Urban Goods Co,stationery,
+E Corner,Candy,14,30,1,0,0,$4.38,05/07/2026,2026-07-09,Metro Wholesale,candy,
+East Corner,milk 1L,11,29,0,0,2 units,$4.29,12/10/2026,Apr 22 2027,Metro Wholesale,groceries,
+Downtown-01,candy-pack,11,32,0,0,0,$4.18,16/04/2026,27/05/2026,Urban Goods Co,candy,
+East-Corner,freezer pizza,5,21,0,0,2,$8.65,Jun 23 2026,02-Oct-2026,Metro Wholesale,frozen,Summer travel season
+east,milk 1L,12,29,0,0,0,"3,94",2026-08-18,2027-01-12,QuickMart Distribution,groceries,Back-to-school season
+DTWN,Frozen Fries,4,11,0,0,0,$5.04,28/07/2026,Dec 14 2026,FreshLine Supply,frozen,
+airport,sparkling-water,11,33,0,0,0,$2.42,Oct 02 2026,2027/01/21,Urban Goods Co,beverages,
+northside,notebooks,7,25,0 units,0,0,$3.32,Aug 08 2026,13/01/2027,QuickMart Distribution,stationery,
+downtown,oat milk,3,31,0 units,0,0,USD 4.10,2026/09/19,02/21/2027,Urban Goods Co,groceries,
+South Shop,Cereal,5,-21,0,0,2,$5.50,18/05/2026,Nov 14 2026,FreshLine Supply,groceries,
+W Market,Bottled Water,24,36,0,0,0,"1,40",09/19/2026,01/12/2027,FreshLine Supply,beverages,
+Southside,Pencil,12,25,0,0,0,$2.13,Jun 19 2026,17/08/2026,Northstar Foods,stationery,
+NORTH_SIDE,paper-cups,8,27 units,0,0,0,USD 6.00,04/10/2026,02/01/2027,Urban Goods Co,checkout supplies,
+DTWN,frozen-pizza,9,16 units,0,0,0,$8.56,16/08/2026,04/28/2027,Urban Goods Co,frozen,
+West Market,sparkling-water,8,23 units,0,1,0,$2.16,2026/08/01,26/12/2026,Metro Wholesale,BEVERAGES,
+westside,EnergyDrink,12 units,36,0,0,3,USD 3.28,2026/03/23,15/12/2026,Northstar Foods,beverages,
+Airport Kiosk,paper bags,26,68,0,0,0,$0.22,23/07/2026,2027-02-10,FreshLine Supply,checkout supplies,
+E Corner,fries frozen,6,6 units,0,0,0,$4.79,Jul 28 2026,2027/05/01,QuickMart Distribution,frozen,
+Airport Kiosk,sandwich,9,25,0,0,1,$7.00,08-Sep-2026,05/01/2027,FreshLine Supply,lunch items,Back-to-school season
+eastside,Candy Packs,12,20,0,0,0,$4.24,09/19/2026,01-May-2027,Urban Goods Co,candy,
+northside,seasonal-mugs,7,23,0,0,3,$9.01,Apr 21 2026,Nov 09 2026,FreshLine Supply,seasonal items,
+South Shop,frozen-pizza,4,27,2,2,0,$8.20,09/18/2026,26-Nov-2026,QuickMart Distribution,frozen,
+south,granola,11,22,0,0,0,"5,25",26/04/2026,2026-10-22,Northstar Foods,lunch items,
+South Shop,seltzer,14,26,0,2,0,USD 2.11,15-Jul-2026,2026-10-15,Urban Goods Co,beverages,
+North,whole milk,8,22,0,0,0,$3.90,02-Mar-2026,28-Jun-2026,FreshLine Supply,groceries,
+South Shop,lunch sandwich,3,11,0,0,0,$7.42,2026-05-30,25/03/2027,FreshLine Supply,lunch items,
+East Corner,H2O bottle,17,48,0 units,0,0,$1.67,Sep 16 2026,09/02/2027,QuickMart Distribution,beverages,
+W Market,EGGS,9,15,0,0,0,$4.99,not-a-date,04/09/2026,FreshLine Supply,groceries,
+NORTH_SIDE,Espresso Pods,10,17,0 units,0,0 units,$11.16,06/24/2026,15/02/2027,Urban Goods Co,coffee,Summer travel season
+DTWN,snack bars,12,28,0,0,2,USD 4.89,2026-05-03,2026/10/04,Urban Goods Co,lunch items,Cinco de Mayo
+North,checkout-bags,30,64,0,0,0 units,"0,20",13-Apr-2026,2026-08-23,FreshLine Supply,checkout supplies,
+south shop,milk 1L,7,21,0 units,0,0,$4.17,04/20/2026,not-a-date,QuickMart Distribution,groceries,
+East-Corner,pretzel,3 units,21,0,0,0,$2.91,25/09/2026,Mar 20 2027,Metro Wholesale,snacks,
+W Market,chocolate,13,38,0,0,0,$1.79,04/14/2026,May 26 2026,Urban Goods Co,candy,
+north shop,sparkling-water,10,18,0,0,0,$2.18,15-May-2026,04/03/2027,Urban Goods Co,beverages,
+south,pepsi 500 ml,24,34,0,0,0,USD 1.94,24/05/2026,25/02/2027,Urban Goods Co,soda,Graduation season
+AIR,potato-chip,23 units,24,0,0,0,$2.89,11-Aug-2026,2026-09-12,Metro Wholesale,chips,Back-to-school season
+terminal shop,energy can,11,27,0,0,0,$3.41,15/06/2026,08/05/2026,Urban Goods Co,beverages,
+North,EnergyDrink,10,22,0,0,0,$3.65,Jul 20 2026,2026/11/22,Metro Wholesale,beverages,
+Southside,oat milk,6,7,0,0,0,$4.51,09/20/2026,2027/05/09,QuickMart Distribution,groceries,
+Southside,FrozenPizza,4,22 units,0,2,1,$7.89,Aug 27 2026,03/18/2027,Metro Wholesale,frozen,
+airport,espresso-pods,10,18,0 units,0,0,$9.54,01/08/2026,2026/12/31,FreshLine Supply,coffee,Back-to-school season
+west,Lunch Box,5,18,0,0,0,"9,94",2026-08-04,01/27/2027,QuickMart Distribution,lunch items,Back-to-school season
+terminal shop,Granola Bars,14,15,0,0,3,$5.17,29-May-2026,04-Dec-2026,QuickMart Distribution,lunch items,Graduation season
+south shop,choc bars,21,22 units,0,0,0,USD 1.99,09/13/2026,Jun 06 2027,Metro Wholesale,CANDY,Back-to-school season
+North Side,Candy,16,31,0,0,1,"4,16",22-Mar-2026,May 29 2026,FreshLine Supply,candy,March Madness
+North,oatmilk,6,11,0,0,0,$3.93,2026/04/27,07/17/2026,Metro Wholesale,groceries,
+Downtown-01,oatmilk,7,22,0,0,0,$4.23,01-Mar-2026,2026/07/02,Metro Wholesale,groceries,
+south shop,sandwich,5,22,1,0,0,$6.54,08/10/2026,2027/01/15,QuickMart Distribution,lunch items,
+Airport Kiosk,paper bags,25,80,0,0,0,$0.19,08/22/2026,2026/09/22,Urban Goods Co,checkout supplies,
+W Market,Spark Water,9,40,1,0 units,0,$2.29,03/13/2026,2026-12-27,Northstar Foods,beverages,
+Airport Kiosk,sandwich,9,25,0,0,1,$7.00,08-Sep-2026,05/01/2027,FreshLine Supply,lunch items,Back-to-school season
+west,coffee_beans,18,30,0,0,1,$14.08,09/06/2026,01/31/2027,Northstar Foods,coffee,Back-to-school season
+North Side,tort chips,16,28,0,0,0,$3.61,23/05/2026,2026/12/30,Northstar Foods,chips,Graduation season
+Downtown-01,tea-bags,6,34,0,0,0,"6,71",Mar 16 2026,2026-05-16,Metro Wholesale,tea,
+North Side,tortilla-chip,8,26,0,0,0,$3.32,2026-10-14,Dec 10 2026,Northstar Foods,chips,
+downtown,Pop Corn,7,41 units,0,0 units,0,$2.55,2026/06/12,17/07/2026,Northstar Foods,snacks,
+DTWN,school notebook,7 units,20,0,0,0,$3.30,05/09/2026,2027/02/19,QuickMart Distribution,stationery,
+south,Pretzels,11,16 units,0,0,0,$2.76,2026-07-08,2027-04-04,QuickMart Distribution,snacks,
+Southside,energy can,12,17,0,0,0,$3.56,2026/09/07,2027/02/09,QuickMart Distribution,beverages,
+DT,ENERGY,16,23,0,0,0,$3.50,29-Jun-2026,21-Sep-2026,Northstar Foods,beverages,
+North,milk 1L,20,13,0,0 units,0 units,"4,35",2026-03-26,05/03/2026,QuickMart Distribution,groceries,March Madness
+East Corner,notebooks,10,12,0,0,0,$3.03,29/06/2026,23/03/2027,QuickMart Distribution,STATIONERY,
+West-Market,tortilla-chip,17,33,0,0,0,$3.68,25/05/2026,2027/02/15,FreshLine Supply,chips,Graduation season
+Airport-Kiosk,Frozen Fries,7,25,0,0,0,$5.37,02/06/2026,Dec 21 2026,FreshLine Supply,frozen,
+AIR,H2O bottle,25,37,0,0 units,0,$1.39,2026/08/21,2026-10-03,Metro Wholesale,beverages,Back-to-school season
+West-Market,pepsi 500 ml,23,34,0,0 units,0,$1.88,2026/08/28,2027-01-18,QuickMart Distribution,soda,Back-to-school season
+W Market,pepsi bottle,20,36 units,0,0,0,$1.89,2026-05-03,Feb 24 2027,FreshLine Supply,soda,Cinco de Mayo
+west,Oat-Milk,7,27,0,0,0,"4,24",06/23/2026,not-a-date,FreshLine Supply,groceries,Summer travel season
+East Corner,popcorn bag,11,22,0,0,0,$2.58,Sep 30 2026,2027-05-24,Northstar Foods,snacks,
+East-Corner,pencils,9,28,0,2,2,$2.00,09/09/2026,21-Dec-2026,Metro Wholesale,stationery,
+Airport Kiosk,popcorn bag,8,35 units,0,0,0,"2,58",2026-09-27,2027/03/27,QuickMart Distribution,snacks,
+downtown,Sandwich Packs,2,16,0,0,0,$7.36,2026/03/04,28-Dec-2026,Metro Wholesale,lunch items,
+AIR,choc bars,13,23,2,0,0,$1.99,2026-05-18,28/08/2026,QuickMart Distribution,candy,Graduation season
+West-Market,tea-bags,7,11,2,4,2,$6.21,Sep 16 2026,27/03/2027,QuickMart Distribution,tea,
+East Corner,sparkling h2o,10,24,0,0,0,$2.32,2026-05-09,12/15/2026,Metro Wholesale,beverages,
+airport,FrozenPizza,17,7,0,0,0 units,$8.54,2026-03-28,Jan 02 2027,Metro Wholesale,frozen,March Madness
+S-Shop,oat milk,7,29 units,0,0,0,$4.00,Jul 06 2026,09/03/2027,QuickMart Distribution,groceries,Summer travel season
+Downtown Store,oatmilk,10,16,0 units,0,0 units,$4.55,25/05/2026,Sep 11 2026,Metro Wholesale,groceries,Graduation season
+South Shop,PEPSI .5L,26,45 units,0,0,1,$1.82,08/23/2026,18/10/2026,Northstar Foods,soda,Back-to-school season
+south shop,chips,22,20,0,0 units,0,USD 3.34,19/03/2026,11-Aug-2026,Northstar Foods,chips,March Madness
+E Corner,PRETZELS,7,30,0,0,0,$2.88,04/13/2026,2026/10/19,Urban Goods Co,snacks,
+south,frozen-pizza,5,12,0,0,0 units,$8.61,2026/05/09,21-Oct-2026,QuickMart Distribution,frozen,
+North Side,milk 1L,10,29 units,0,0,0,$3.84,02-Jun-2026,22-Sep-2026,Metro Wholesale,groceries,Graduation season
+north shop,milk 1L,18,23,0 units,0,0,$3.71,2026-08-07,04/03/2027,Urban Goods Co,groceries,Back-to-school season
+east,Gift Cards,2,16,2,0,0,$27.59,10/03/2026,10/29/2026,Northstar Foods,gifts,
+north shop,COFFEE beans,12,18,5,0,0,$12.93,2026/07/02,Jan 14 2027,Urban Goods Co,coffee,Independence Day
+Downtown Store,espresso pod,14 units,25,0,0,0,$10.43,2026-07-26,05/02/2027,Northstar Foods,COFFEE,Summer travel season
+North,paper-cups,5,missing,0 units,0,0,$6.58,10/08/2026,10/08/2026,Metro Wholesale,checkout supplies,
+eastside,pepsi 500 ml,22,38,0,0,0,$2.11,2026-08-17,2026/09/18,Urban Goods Co,soda,Back-to-school season
+east,snack bars,9,15,0,0,0,$4.74,25/07/2026,2027/01/16,Metro Wholesale,lunch items,Summer travel season
+airport,EGGS,8,10 units,0,0,0,USD 4.68,09/01/2026,Mar 15 2027,Northstar Foods,groceries,
+south,Pencil,10,34,0,0,0,$1.89,04/20/2026,25/07/2026,Northstar Foods,stationery,
+S-Shop,lunch sandwich,6 units,10,0,0,0 units,$6.61,Apr 03 2026,May 09 2026,FreshLine Supply,lunch items,Easter
+west,Cereal,3,28,0,0,0,$5.81,2026/09/23,05/03/2027,FreshLine Supply,GROCERIES,
+northside,Lunch Box,3 units,28,0,0 units,0,$10.56,06/01/2026,2026/12/26,Metro Wholesale,lunch items,
+Airport-Kiosk,candy bar,9,35,0,0,0,$1.74,2026/03/11,30-Dec-2026,FreshLine Supply,candy,
+northside,pizza frozen,7,19,0,0,0,$8.30,09/26/2026,Mar 01 2027,Urban Goods Co,FROZEN,
+S-Shop,Tortilla Chips,13,44,0,0,0,$3.39,2026-09-02,Dec 02 2026,Urban Goods Co,chips,Back-to-school season
+E Corner,pizza frozen,4,14,0,0,0,USD 7.65,Sep 29 2026,2027/04/12,Metro Wholesale,frozen,
+W Market,Gift Cards,4,5,0,0,0,$23.83,10/03/2026,11/08/2026,Urban Goods Co,gifts,
+E Corner,pizza frozen,4,14,0,0,0,USD 7.65,Sep 29 2026,2027/04/12,Metro Wholesale,frozen,
+Airport Kiosk,snack bars,10,28,0,0,0,$5.48,2026-10-06,02-Jul-2027,Northstar Foods,lunch items,
+south shop,tortilla-chip,19,19,0,0 units,0 units,$3.17,2026-09-15,23/12/2026,FreshLine Supply,chips,Back-to-school season
+North Side,Coke .5L,19,47,0,4,0,"2,15",2026/05/09,05/12/2026,Metro Wholesale,soda,
+DTWN,store gift card,3 units,15,0,0,0,$26.77,06/20/2026,2026/11/21,Northstar Foods,gifts,
+South Shop,sandwich pack,11,18,0,0,0,$7.13,06/09/2026,13-Jan-2027,Urban Goods Co,lunch items,Back-to-school season
+East-Corner,PRETZELS,11,20,3 units,0,0,USD 3.04,2026-07-10,Dec 17 2026,QuickMart Distribution,snacks,
+E Corner,cereal box,4,15,0,0,0,$5.80,21/06/2026,15/11/2026,Metro Wholesale,groceries,
+east,school notebook,7,25,0,0 units,0,$2.86,2026/03/09,16-Aug-2026,Metro Wholesale,stationery,
+DTWN,oat milk,5,24,0,0,0 units,$4.22,2026/05/30,03/17/2027,Metro Wholesale,groceries,Graduation season
+Airport Kiosk,lunch sandwich,8 units,13,0,0,0 units,$6.62,2026-07-18,2026-12-27,Metro Wholesale,lunch items,Summer travel season
+terminal shop,Pretzels,9,36,0,0,0 units,$2.67,2026-03-01,May 24 2026,Urban Goods Co,SNACKS,
+North,ESP pods,6,35,0,0,0,$9.44,10-May-2026,04-Jan-2027,QuickMart Distribution,coffee,
+south shop,sparkling h2o,-10,37,0,0,0,$2.33,09/01/2026,Apr 18 2027,QuickMart Distribution,beverages,
+west,tea bag,7,0,1,1,2,$6.45,10/11/2026,Aug 04 2027,QuickMart Distribution,tea,
+northside,white bread,8,25,0,0,0,"3,88",07/08/2026,2026-09-18,Northstar Foods,groceries,
+Southside,frozen-pizza,9,18,3,0,3,$8.64,2026-07-26,23/04/2027,Northstar Foods,frozen,Summer travel season
+terminal shop,GiftCard,6,22,0,0,0,$27.56,06/08/2026,2026/07/31,Urban Goods Co,gifts,
+East-Corner,seltzer,11,15 units,0,0,0,$2.35,2026-10-15,03/22/2027,Urban Goods Co,beverages,
+northside,Paper Cups,7,12,0,0,0,"6,26",2026-04-28,2027/02/18,Metro Wholesale,checkout supplies,
+eastside,Lunch Box,8,0,3 units,0,2,USD 9.52,03/05/2026,07/03/2026,Metro Wholesale,lunch items,
+airport,chocolate,14,42,0 units,0 units,0,$1.95,Mar 07 2026,2026-05-31,QuickMart Distribution,candy,
+South Shop,PENCILS,9,34,0,2,0,USD 2.00,Jul 21 2026,2026/08/31,QuickMart Distribution,stationery,
+Airport-Kiosk,espresso-pods,8,33,0,0,2,$10.07,2026/04/23,2026/08/02,QuickMart Distribution,coffee,
+East-Corner,Espresso Pods,8,26,0,0,0,$9.89,18/05/2026,2026/12/12,Northstar Foods,coffee,Graduation season
+eastside,Paper Cups,7,28,0,0,0,$5.84,27/06/2026,2026-09-27,Urban Goods Co,checkout supplies,
+E Corner,COFFEE beans,12,35,0 units,0,0,$12.11,04/29/2026,not-a-date,QuickMart Distribution,coffee,
+eastside,bags checkout,24,85,0,0,0,"0,21",09/04/2026,25-Jan-2027,Northstar Foods,checkout supplies,
+airport,school lunchbox,2,18,0,0,0,$10.62,Jun 11 2026,Nov 21 2026,QuickMart Distribution,lunch items,
+Downtown-01,Milk,12,missing,0,0,0 units,$4.19,09-Oct-2026,01/09/2027,FreshLine Supply,groceries,
+eastside,espresso-pods,14,10,0,0 units,1,"10,88",09/10/2026,2026-11-16,Urban Goods Co,coffee,NFL kickoff
+northside,notebooks,5,missing,0,0,1 units,"2,78",08/10/2026,2027/01/21,Metro Wholesale,stationery,
+Downtown Store,Spark Water,9,40,0,0,3,$2.50,2026/09/17,11/18/2026,Urban Goods Co,beverages,
+DT,school pencils,14,33,0 units,0,3,$1.90,08/11/2026,Jan 07 2027,Northstar Foods,stationery,
+eastside,paper bags,32,59,0,0,1,"0,20",10-Aug-2026,Jan 29 2027,Urban Goods Co,checkout supplies,
+downtown,tort chips,16,23,0,0,0,USD 3.62,2026-03-26,04-Aug-2026,Metro Wholesale,chips,March Madness
+north shop,frozen-fries,9,17,0,0,0,$5.38,22-Sep-2026,27/06/2027,QuickMart Distribution,frozen,
+airport,oatmilk,11,24 units,0,0,1,$4.19,06/21/2026,2027/02/17,Metro Wholesale,groceries,Father's Day
+E Corner,chocolate,16,39,0,0,0,$1.76,May 26 2026,Mar 17 2027,QuickMart Distribution,candy,Graduation season
+AIR,breakfast cereal,4,17,0,0,0,USD 5.69,06/20/2026,2026-11-24,QuickMart Distribution,groceries,
+DTWN,notebooks,4,25,0,0,0,$3.17,29-Apr-2026,24-Oct-2026,Metro Wholesale,stationery,
+Airport-Kiosk,white bread,8,31,0,1,0,"3,30",not-a-date,16-Feb-2027,Northstar Foods,groceries,
+East-Corner,water bottle,28,36,0,0,0 units,$1.53,Jul 24 2026,18-May-2027,FreshLine Supply,beverages,Summer travel season
+East Corner,popcorn,8,36,0,1,0,$2.59,2026-04-11,28-Apr-2026,Northstar Foods,snacks,
+south,CEREAL,7,18,0,0,0,$5.27,09-Sep-2026,2026/12/12,Metro Wholesale,GROCERIES,
+AIR,EnergyDrink,15,23,0 units,0,0,$3.25,Aug 25 2026,02/09/2027,QuickMart Distribution,beverages,
+south,chips,17,46,0,0,0,$2.89,30-Jun-2026,2026-11-15,FreshLine Supply,chips,Summer travel season
+south shop,sandwich,5,22,1,0,0,$6.54,08/10/2026,2027/01/15,QuickMart Distribution,lunch items,
+W Market,PENCILS,10,34,0,0,0,"2,05",03/09/2026,05-Nov-2026,Urban Goods Co,stationery,
+S-Shop,school lunchbox,5,10,5,0,0,$9.61,05/10/2026,Jul 29 2026,Metro Wholesale,lunch items,
+Airport-Kiosk,OATMILK 1L,9,16 units,0,0,0,$3.90,2026/06/05,2026/08/22,Northstar Foods,groceries,National Donut Day
+terminal shop,white bread,11,28,5,0,0,$3.59,04/17/2026,26/07/2026,QuickMart Distribution,groceries,
+east,chips,19,47,0,0,0,$3.07,2026/07/24,2026/10/10,Urban Goods Co,chips,Summer travel season
+North,holiday mug,8,17,0,0 units,0 units,"9,03",08/15/2026,03/26/2027,FreshLine Supply,seasonal items,
+DTWN,Checkout Bags,26,78,0,0,0,USD 0.22,2026/08/19,Jun 05 2027,Metro Wholesale,CHECKOUT-SUPPLIES,
+Airport Kiosk,snack bars,12,25,0,0,0,$5.24,26-Sep-2026,07/12/2027,FreshLine Supply,LUNCH-ITEMS,
+W Market,PRETZELS,8 units,20,0,0,0,USD 2.75,2026-04-21,01-Feb-2027,Northstar Foods,snacks,
+East-Corner,Pencil,5,24,0,0,0,$2.10,2026/06/19,Mar 22 2027,Northstar Foods,STATIONERY,
+north shop,breakfast cereal,6,25 units,0 units,0,0,$5.79,2026/05/25,2026/10/19,Northstar Foods,groceries,
+East-Corner,pretzel,11,13,0,0,0,$2.61,2026-08-04,Sep 15 2026,Northstar Foods,snacks,
+south,fries frozen,9,15,0,0,1,$4.83,23/09/2026,01/12/2027,Northstar Foods,frozen,
+West Market,ENERGY,7,28,0,0,0,$3.30,Aug 12 2026,12/15/2026,Metro Wholesale,beverages,
+west,energy can,15,14,0,0,0,$3.45,05/25/2026,2027-01-26,Northstar Foods,beverages,
+West Market,CocaCola500,25,40,0,0,0,"2,00",2026-07-13,04/03/2027,Metro Wholesale,soda,Summer travel season
+West Market,note-books,8,19,0,0,0,$3.32,10/08/2026,05/10/2026,FreshLine Supply,stationery,
+Downtown Store,school notebook,5,20,0,0,0,$3.21,Sep 03 2026,03/29/2027,Northstar Foods,stationery,
+E Corner,school lunchbox,3,29,5,0,0 units,$9.21,Mar 09 2026,2026-04-27,QuickMart Distribution,LUNCH-ITEMS,
+Airport-Kiosk,white bread,8,31,0,1,0,"3,30",not-a-date,16-Feb-2027,Northstar Foods,groceries,
+Downtown Store,ENERGY,13,missing,0,0,0,$3.61,Mar 13 2026,11-May-2026,Metro Wholesale,beverages,
+DT,sandwich pack,5,25,0,0,0,$6.84,07/09/2026,02/16/2027,Northstar Foods,lunch items,Back-to-school season
+northside,sandwich pack,7,15,0,0,0,$6.74,07-Mar-2026,2026-07-04,Urban Goods Co,LUNCH-ITEMS,
+Downtown-01,egg dozen,11,15,0,0,0,$4.67,08/11/2026,Mar 11 2027,Northstar Foods,groceries,
+West Market,notebooks,6,34,0,2 units,0,$3.27,Aug 21 2026,07-Nov-2026,QuickMart Distribution,stationery,
+S-Shop,12 eggs,7,23,3 units,2,0,USD 4.93,03/23/2026,23/09/2026,QuickMart Distribution,groceries,
+West-Market,coca cola 500ml,24,missing,0 units,0,0,bad-price,Aug 17 2026,2027-03-29,QuickMart Distribution,soda,Back-to-school season
+south shop,Tortilla Chips,missing,27,0,0 units,0,$3.31,04/23/2026,05/25/2026,QuickMart Distribution,chips,
+South Shop,gift-card,6,20,1,0,3,"26,99",14/09/2026,Jan 02 2027,Northstar Foods,gifts,
+north shop,BREAD,13 units,14,0,0,0,$3.45,2026/04/05,04-Nov-2026,Urban Goods Co,groceries,
+airport,Lunch Box,5,4,0,0,0 units,$9.69,Apr 23 2026,Sep 17 2026,Metro Wholesale,lunch items,
+westside,COFFEE beans,8,missing,0,0,0,$13.79,2026-07-30,2026-10-11,Northstar Foods,coffee,Summer travel season
+W Market,cups paper,6,12,0,0,0,"6,69",04/12/2026,2026-11-13,Metro Wholesale,checkout supplies,
+North,PRETZELS,4,37,2,0,0,$2.89,Mar 03 2026,16/10/2026,Northstar Foods,snacks,
+DT,pencils,11,39,0,0,0,$2.11,09/06/2026,02/03/2027,FreshLine Supply,stationery,
+S-Shop,espresso-pods,6,18,2,0,0,$9.52,07-Mar-2026,2026-04-10,Metro Wholesale,COFFEE,
+S-Shop,granola-bars,9,22,1,0,0 units,$5.42,Apr 27 2026,22-Jan-2027,Northstar Foods,lunch items,
+North,Bottled Water,22,52,0,0,0,$1.50,30-Apr-2026,22-Jun-2026,Urban Goods Co,beverages,
+westside,Frozen Fries,9,18,0,0,0,$4.62,14-May-2026,09/18/2026,Metro Wholesale,frozen,
+North Side,Paper Cups,8,15,0,0,0,USD 5.51,09-Sep-2026,08/05/2027,FreshLine Supply,checkout supplies,
+E Corner,Milk,10,17,0,0,1,$3.85,09/17/2026,2027-07-04,FreshLine Supply,groceries,
+NORTH_SIDE,nacho chips,18,37,0,0,0,$3.42,09/11/2026,26/11/2026,Urban Goods Co,chips,Back-to-school season
+Airport-Kiosk,whole milk,10,33,0,0,2 units,$4.10,07/19/2026,Aug 28 2026,Metro Wholesale,groceries,Summer travel season
+Downtown-01,sandwich pack,8,10,0,0,0,$7.62,2026/09/25,2027-03-02,FreshLine Supply,lunch items,
+south shop,sparkling-water,10 units,35,0,0,0,$2.46,02-May-2026,Oct 02 2026,Urban Goods Co,beverages,
+S-Shop,school lunchbox,9,6,0,0,0,"9,43",18-Jul-2026,Dec 16 2026,Northstar Foods,lunch items,
+eastside,12 eggs,7,20,0,0,0,$4.58,10/05/2026,Feb 21 2027,Urban Goods Co,GROCERIES,
+northside,white bread,-7,30,0,0,0,"3,87",17-Apr-2026,16/12/2026,QuickMart Distribution,groceries,
+DT,Espresso Pods,5,18,0 units,0,3,USD 10.03,22/04/2026,2027-02-03,Metro Wholesale,coffee,
+Downtown-01,paper-cups,-6,22,0,0,0,"6,45",Sep 12 2026,2027/02/15,QuickMart Distribution,checkout supplies,
+W Market,Potato Chips,13,36 units,0,0,0,$3.07,2026-03-05,2026-11-08,Urban Goods Co,chips,
+Southside,espresso-pods,12,8,2,0,0 units,$10.40,not-a-date,2026-11-03,Northstar Foods,coffee,Summer travel season
+airport,pencils,12,18,0,0,0,$2.20,2026/06/30,12/27/2026,Urban Goods Co,stationery,
+Southside,GiftCard,2,16,1,0 units,0,$26.12,Mar 26 2026,05/08/2026,FreshLine Supply,GIFTS,
+West Market,water 500ml,27,49,0 units,0,2,$1.39,Aug 02 2026,15/04/2027,Metro Wholesale,beverages,Back-to-school season
+north shop,paper-cups,7,9,0,0,0,$5.80,07/24/2026,2027/02/03,Northstar Foods,checkout supplies,
+DTWN,sandwich,missing,0,0,0,0,$7.47,27-Apr-2026,2026-10-03,Metro Wholesale,lunch items,
+East-Corner,Coffee-Beans,8,30 units,0,0,0,$12.84,11-Oct-2026,May 21 2027,FreshLine Supply,coffee,
+S-Shop,popcorn bag,7 units,32,0,0,0,$2.71,06/02/2026,Oct 09 2026,Northstar Foods,snacks,
+East-Corner,lunch-box,4,28,0,0,0 units,USD 10.38,2026-07-03,29-Sep-2026,QuickMart Distribution,lunch items,
+East Corner,holiday mug,8,12,0,0,0,$8.91,2026-04-28,09/11/2026,Metro Wholesale,seasonal items,
+North,pizza frozen,10,19,0,0,0,$8.19,Mar 13 2026,28/07/2026,Metro Wholesale,frozen,
+South Shop,espresso pod,13,missing,0 units,0,0,$9.36,2026/06/06,2026-10-28,FreshLine Supply,coffee,Graduation season
+West-Market,water bottle,23,40,0,0,0,$1.45,18/04/2026,Sep 02 2026,Northstar Foods,beverages,
+terminal shop,Pepsi500,18 units,49,0,0 units,0,$2.07,03-Jun-2026,25/01/2027,QuickMart Distribution,soda,Graduation season
+DTWN,paper-cups,4,15,0,0,0,$5.68,Apr 04 2026,2026-10-01,Metro Wholesale,CHECKOUT-SUPPLIES,
+East Corner,Oat-Milk,8,20,1,0,0,$3.89,05-Oct-2026,Dec 20 2026,FreshLine Supply,groceries,
+DTWN,lunch-box,5,15,2,2,0,$10.78,Sep 27 2026,26-Dec-2026,QuickMart Distribution,lunch items,
+westside,pencils,6,25,0,0,0,$1.98,2026-05-08,2026-06-16,Urban Goods Co,STATIONERY,
+northside,GiftCard,8,2,5,0,0,$26.67,Apr 04 2026,02/10/2026,QuickMart Distribution,GIFTS,
+south shop,chips,22,20,0,0 units,0,USD 3.34,19/03/2026,11-Aug-2026,Northstar Foods,chips,March Madness
+North Side,breakfast cereal,4,27,0,0,0,$5.55,2026-07-31,Nov 08 2026,FreshLine Supply,groceries,
+S-Shop,sparkling-water,-8,38,0,0 units,0,$2.51,2026-06-13,12/31/2026,QuickMart Distribution,beverages,
+East-Corner,MILK,18,2,5 units,0,0,$4.20,Sep 13 2026,2027-02-20,QuickMart Distribution,GROCERIES,Back-to-school season
+westside,holiday mug,8,13,0,0 units,0,$9.93,2026/06/29,12-Oct-2026,QuickMart Distribution,seasonal items,
+airport,Potato Chips,13,47,0,1,0,$2.76,29/09/2026,07-Mar-2027,Northstar Foods,chips,
+DT,breakfast cereal,5,27 units,2,0,0,$5.94,2026-06-03,08/01/2027,Metro Wholesale,groceries,
+south,chips,23,29,0,0,0,$2.79,Aug 01 2026,2026/11/16,QuickMart Distribution,chips,Back-to-school season
+Southside,milk 1L,14,7,5,0,0,USD 3.69,2026-07-14,19-Feb-2027,Metro Wholesale,groceries,Prime Day
+East Corner,Cereal,2,27,0,0 units,0,$5.22,2026/09/17,2026-12-22,FreshLine Supply,groceries,
+terminal shop,12 eggs,8,27,0 units,0,0,$4.65,07/22/2026,04-Feb-2027,FreshLine Supply,groceries,
+East Corner,EGGS,6,19,0,0,0,$4.82,07/28/2026,24/03/2027,Metro Wholesale,groceries,
+North Side,Notebook,6,34,2,1,2,$3.30,05-Jun-2026,22-Aug-2026,Metro Wholesale,stationery,
+Airport-Kiosk,holiday mug,0,10,0,0,0,$9.02,09/07/2026,01/22/2027,Metro Wholesale,seasonal items,
+DTWN,sandwich,10,22 units,0,0 units,0,$7.82,08/30/2026,2027/03/26,FreshLine Supply,lunch items,Back-to-school season
+north shop,freezer fries,5,31,0,0,0,"5,03",11/08/2026,2026/09/03,Urban Goods Co,frozen,
+North,tea bag,9,9,0,4,0,"7,27",01-Jun-2026,21-Oct-2026,FreshLine Supply,tea,Graduation season
+East-Corner,energy-drink,10,29,0,0 units,0,$3.63,08/08/2026,01/31/2027,Northstar Foods,beverages,
+northside,tea bag,11,13,0,0,0,$7.17,03/13/2026,02/10/2026,Northstar Foods,tea,
+south,nacho chips,16,31,0,0,0,"3,49",12-Mar-2026,2026-05-31,QuickMart Distribution,chips,
+W Market,OATMILK 1L,6 units,8,0,0,0,bad-price,03-Jun-2026,10/23/2026,QuickMart Distribution,groceries,Graduation season
+S-Shop,pizza frozen,6,0,0,2,2 units,"8,89",2026-09-03,2026-12-15,Urban Goods Co,frozen,
+north shop,energy-drink,16,15,0,1,0,$3.65,07/06/2026,12-Jan-2027,QuickMart Distribution,BEVERAGES,
+eastside,Candy,9,39,0,0,0,"4,41",09/29/2026,2026-12-09,Urban Goods Co,candy,
+North,Bread,15,13,0,0,0 units,USD 3.38,11-Oct-2026,2027/01/16,Metro Wholesale,groceries,
+North Side,note-books,9,10,0,0,3,$2.77,16/08/2026,02/12/2026,QuickMart Distribution,stationery,
+East Corner,bags checkout,29,65,0,0,0,$0.22,2026/07/24,2026/10/11,Metro Wholesale,checkout supplies,
+northside,frozen-pizza,10,22 units,0,0,0,$8.81,07/04/2026,2026/11/11,Metro Wholesale,frozen,Independence Day
+North Side,Checkout Bags,25,89,0,0,3,$0.20,2026-06-14,20-Jan-2027,Northstar Foods,checkout supplies,
+NORTH_SIDE,pepsi bottle,18,44,0,0,0 units,$1.84,Jun 13 2026,30-Jul-2026,Northstar Foods,soda,Graduation season
+Downtown-01,Bread,10,17,0 units,0,0,$3.26,Jul 17 2026,2027-03-12,QuickMart Distribution,groceries,
+West Market,water bottle,24,36 units,0,0,0,$1.46,07/17/2026,2027/04/01,Metro Wholesale,beverages,Summer travel season
+West-Market,coffee bean,10,27,0,0,0,$12.67,23/05/2026,2026/10/04,Urban Goods Co,coffee,Graduation season
+North,POP-CORN,8,25,0,0,0 units,USD 2.74,Jun 29 2026,30/12/2026,Northstar Foods,snacks,
+east,COFFEE beans,16,29,0,0,0,"14,51",2026-08-18,03/06/2027,Metro Wholesale,coffee,Back-to-school season
+DT,Cereal,4,28,0,0,0,$6.11,Mar 14 2026,Sep 03 2026,QuickMart Distribution,groceries,
+south shop,PRETZELS,8,31,0,0,0,USD 3.09,06/05/2026,Feb 03 2027,FreshLine Supply,snacks,
+W Market,Pencil,13,18,0,0,0,$1.93,16/05/2026,Aug 15 2026,Urban Goods Co,stationery,
+eastside,frozen-fries,5,7,0,0,0,$4.84,13/10/2026,15-Jun-2027,FreshLine Supply,frozen,
+terminal shop,note-books,8,18,0,0,0,$3.05,2026/05/13,19-Dec-2026,QuickMart Distribution,stationery,
+Airport Kiosk,frozen-fries,9,6,0,0,0,$4.85,2026/07/29,01/20/2027,FreshLine Supply,frozen,
+north shop,note-books,8,11,0,0,0,USD 3.14,2026/05/24,10/05/2026,Northstar Foods,stationery,
+terminal shop,frozen-fries,3,17,0,0,0,$4.94,02-Apr-2026,2026-12-28,Metro Wholesale,frozen,
+west,12 eggs,7,16,0,0,0,$5.00,2026/08/21,2027-01-05,Metro Wholesale,groceries,
+E Corner,Milk,18,11 units,0,0,0,$3.86,2026-05-04,2026-09-17,FreshLine Supply,groceries,Cinco de Mayo
+North,FrozenPizza,4,26,0,0,0,$7.80,04/20/2026,Sep 19 2026,FreshLine Supply,frozen,
+downtown,GiftCard,2,27,0,0,0,$24.07,Apr 26 2026,27/06/2026,Metro Wholesale,gifts,
+West-Market,sandwich,-9,18,0,4,0,$7.50,2026-06-26,2027-04-01,Urban Goods Co,lunch items,Summer travel season
+S-Shop,crisps,28 units,25,0,0,0,$2.87,2026-03-21,Oct 17 2026,Metro Wholesale,chips,March Madness
+S-Shop,water 500ml,18,56,0,0,1,$1.42,2026-09-28,11/03/2026,Northstar Foods,beverages,
+DT,Coke .5L,17,39,0 units,0,0,"1,97",2026-09-27,2027/04/07,QuickMart Distribution,soda,
+East Corner,Pop Corn,11,21,0,0,0,$2.70,18-May-2026,26/10/2026,Metro Wholesale,snacks,
+northside,store gift card,5,21,0,0,0,USD 26.96,2026-07-20,Nov 27 2026,Urban Goods Co,gifts,
+E Corner,freezer fries,10,14,0,0,0,$5.01,22/07/2026,08-Mar-2027,Metro Wholesale,frozen,
+DT,Cereal,4,28,0,0,0,$6.11,Mar 14 2026,Sep 03 2026,QuickMart Distribution,groceries,
+eastside,store gift card,5,20,0,0 units,0,$23.16,08/26/2026,31-Jan-2027,Metro Wholesale,gifts,
+south shop,store gift card,3 units,23,1,0,0,$25.45,28-Jun-2026,07/10/2026,FreshLine Supply,gifts,
+W Market,coke bottle,19,55,0,0,0,$2.01,not-a-date,2027-02-08,Northstar Foods,soda,
+westside,Gift Cards,4 units,9,0,0,0,$27.51,03/10/2026,Aug 12 2026,Northstar Foods,gifts,
+Downtown-01,MILK,18,18,0,0,0,$4.40,01-Apr-2026,06-Dec-2026,Urban Goods Co,groceries,March Madness
+west,egg dozen,5,11,2,0,0 units,$4.18,06-May-2026,2027-02-27,Urban Goods Co,groceries,
+northside,EnergyDrink,12,38,0,0,0,$3.55,2026/05/20,2026-07-13,FreshLine Supply,beverages,
+Airport Kiosk,ENERGY,15,26,0,0,0,$3.24,21-Mar-2026,07/06/2026,Urban Goods Co,BEVERAGES,
+terminal shop,energy can,6,25,2,0,0,$3.26,Mar 18 2026,05/09/2026,Northstar Foods,beverages,
+North,PEPSI .5L,20,33,0,0,0,$1.80,06/08/2026,07-Aug-2026,Northstar Foods,soda,Graduation season
+East Corner,holiday mug,1,10 units,0,0,0,$9.33,Sep 02 2026,01/04/2027,FreshLine Supply,seasonal items,
+West Market,pizza frozen,12,23,0,0,0,$7.75,2026/06/24,04/02/2027,FreshLine Supply,frozen,Summer travel season
+Airport Kiosk,pencils,13,29,1,0,0 units,$1.88,not-a-date,23/07/2026,Urban Goods Co,stationery,
+westside,water bottle,36,27,3,0,0,$1.61,not-a-date,2026/06/08,FreshLine Supply,BEVERAGES,March Madness
+eastside,oatmilk,8,20,0,0,0 units,$3.89,24-Aug-2026,12-Jan-2027,Northstar Foods,groceries,Back-to-school season
+northside,oatmilk,10,17,0,0,0,$4.29,07/25/2026,Oct 24 2026,Metro Wholesale,groceries,Summer travel season
+East-Corner,frozen-fries,9,17,0 units,0,0,$5.50,01-Sep-2026,2026/11/15,Urban Goods Co,frozen,
+north shop,Granola Bars,14,19 units,0,0,0 units,USD 5.13,2026/08/27,Sep 29 2026,QuickMart Distribution,lunch items,Back-to-school season
+DT,BREAD,11,25,1,0,0,$3.70,2026-03-22,22/06/2026,QuickMart Distribution,groceries,
+west,TEA BAGS,7,29,0,0,0,$7.03,19-Apr-2026,2026/06/01,Northstar Foods,tea,
+south shop,PEPSI .5L,12 units,52,0,0,0,USD 2.11,04/11/2026,2026-12-18,Northstar Foods,SODA,
+Airport-Kiosk,Bread,7,13,0,4,1,USD 3.49,18-Aug-2026,10/06/2026,FreshLine Supply,groceries,
+terminal shop,crisps,23,24,0,0,0,$3.16,25/08/2026,2026-12-19,FreshLine Supply,chips,Back-to-school season
+east,holiday mug,4 units,17,0,0,0,$8.51,2026-04-13,30/12/2026,QuickMart Distribution,seasonal items,
+North Side,seasonal-mugs,5,8,0,0,0,"8,49",06-Oct-2026,25/03/2027,QuickMart Distribution,seasonal items,
+eastside,Potato Chips,16,27,0,0,0,$2.99,09-Jun-2026,Feb 06 2027,Urban Goods Co,chips,Graduation season
+NORTH_SIDE,chocolate,19,29,0,0,0,"1,70",2026/05/26,2027/03/06,Northstar Foods,candy,Graduation season
+Downtown Store,egg dozen,7,27,0,0,0,$4.79,Jun 19 2026,02/09/2027,Northstar Foods,groceries,
+downtown,school pencils,6,25,0,0,0,$1.95,2026-09-08,11/06/2026,QuickMart Distribution,stationery,
+Downtown-01,seltzer,9,38,0,1,0,USD 2.24,07/20/2026,2027-02-25,Urban Goods Co,beverages,
+south shop,POP-CORN,11,19,0,0,0,$2.46,2026-06-20,2026-10-24,FreshLine Supply,snacks,
+NORTH_SIDE,coca cola 500ml,26,30,0,0,0,$1.93,08/15/2026,22/01/2027,Northstar Foods,soda,Back-to-school season
+northside,granola,10 units,20,0,0,0,$4.74,May 08 2026,08/06/2026,QuickMart Distribution,lunch items,
+East-Corner,note-books,9,31,0 units,0,0,USD 3.25,2026/04/27,08-Sep-2026,QuickMart Distribution,stationery,
+AIR,popcorn,10,18,0 units,0,0,$2.59,2026/05/29,Dec 22 2026,Metro Wholesale,snacks,
+south,bags checkout,31,67,0,0,0,$0.22,02-Sep-2026,03/28/2027,Urban Goods Co,checkout supplies,
+DT,pepsi 500 ml,23,39,0,0,0,$1.80,07-Jun-2026,2027-02-05,Metro Wholesale,soda,Graduation season
+downtown,snack bars,5,20,0 units,0,0,USD 4.80,12-Oct-2026,Mar 13 2027,QuickMart Distribution,lunch items,
+DTWN,Sandwich Packs,8,10,0,0,0,$7.23,10-Jun-2026,26-Dec-2026,Metro Wholesale,lunch items,Summer travel season
+north shop,checkout cups,4,20,0,0 units,0,$6.18,2026/08/31,Oct 12 2026,Northstar Foods,checkout supplies,
+South Shop,school lunchbox,8,1,0,0 units,0,$9.42,12/08/2026,Apr 20 2027,Northstar Foods,lunch items,Back-to-school season
+NORTH_SIDE,tea-bags,missing,25,0,0,0,$6.19,May 14 2026,Jan 01 2027,Urban Goods Co,tea,
+E Corner,school notebook,6,0,3,1,3,USD 3.21,19-Jul-2026,Apr 12 2027,Metro Wholesale,stationery,
+S-Shop,sandwich pack,11,9,0,0,0,$7.09,13-Jun-2026,2026/12/01,Metro Wholesale,lunch items,Summer travel season
+S-Shop,pretzel bag,5,40,0,0,0,$3.04,24/03/2026,02/06/2026,Urban Goods Co,snacks,
+East Corner,milk 1L,11,17,0,0,0,$3.99,20/09/2026,21-Nov-2026,FreshLine Supply,groceries,
+East-Corner,white bread,10,14,0,0,0,$3.87,06/11/2026,09/11/2026,Metro Wholesale,groceries,
+DT,EGGS,8,25,0,0,0,USD 4.73,04/09/2026,14/04/2027,Urban Goods Co,groceries,
+south shop,popcorn bag,10,29,0,0,0,$2.77,2026/06/09,06/11/2026,QuickMart Distribution,snacks,
+East Corner,EnergyDrink,12,39,0,0,0,USD 3.89,2026-06-10,17-Aug-2026,QuickMart Distribution,beverages,
+South Shop,ENERGY,10,31,0,0,0,$3.30,2026-09-10,28-Jan-2027,FreshLine Supply,beverages,
+East Corner,holiday mug,3,23,0,0,0,USD 8.41,May 09 2026,05/08/2026,QuickMart Distribution,seasonal items,
+East Corner,nacho chips,12,44,0,2,0,USD 3.64,Aug 25 2026,2026/11/11,Urban Goods Co,chips,Back-to-school season
+Downtown Store,Notebook,10 units,21,0,0,0,$3.31,10/11/2026,2027/07/04,FreshLine Supply,stationery,
+W Market,pretzel,-5,35,0,0,0 units,$2.80,06/04/2026,08/03/2026,Urban Goods Co,snacks,
+DTWN,candy-pack,7,19,0,0 units,0,$4.09,14/04/2026,10/01/2027,QuickMart Distribution,CANDY,
+West-Market,holiday mug,1,18,0,1,2,USD 9.25,17/07/2026,02-Dec-2026,Urban Goods Co,seasonal items,
+NORTH_SIDE,popcorn bag,11,30 units,0,0,3,$2.65,05/02/2026,Sep 12 2026,FreshLine Supply,snacks,
+East-Corner,freezer pizza,12,7 units,0,0,0,$8.59,May 10 2026,24-Oct-2026,QuickMart Distribution,FROZEN,
+East-Corner,tort chips,14,39,0,0,0,$3.63,23/04/2026,09-Jan-2027,Metro Wholesale,chips,
+Downtown Store,GiftCard,7,6,0,0,0,$24.16,05/27/2026,15/03/2027,Northstar Foods,gifts,
+east,ESP pods,17,4,5,0,0,$10.58,2026/03/22,08/22/2026,QuickMart Distribution,coffee,March Madness
+NORTH_SIDE,FrozenPizza,10,14,1,0,0,$8.79,27/03/2026,2026-08-25,QuickMart Distribution,FROZEN,March Madness
+Downtown Store,granola-bars,8,25,0,0,0,$5.29,20-Apr-2026,04/07/2026,Northstar Foods,lunch items,
+DT,white bread,10,16,0,0,0,$3.69,03/04/2026,09/15/2026,Urban Goods Co,groceries,
+NORTH_SIDE,PEPSI .5L,19,31,0,0,1,$1.89,03/03/2026,01-Dec-2026,QuickMart Distribution,soda,
+east,sweet packs,12,14,0,0,0,$4.00,04-Aug-2026,04/05/2027,Metro Wholesale,candy,Back-to-school season
+downtown,tea bag,12,27,0,0,0,$6.39,01/07/2026,2027/02/12,FreshLine Supply,tea,Independence Day
+E Corner,lunch boxes,1,31,0,0,0,$10.18,07/03/2026,2026-11-23,Urban Goods Co,lunch items,
+Downtown-01,energy can,16,missing,0,0,0,USD 3.69,2026-07-31,2026/11/13,Urban Goods Co,beverages,
+E Corner,espresso pod,15,6,0,0,0,$9.79,2026/08/22,Feb 12 2027,Urban Goods Co,coffee,Back-to-school season
+Southside,Gift Cards,0,0,1,0 units,0,$24.49,2026-07-21,09/18/2026,FreshLine Supply,gifts,
+Downtown-01,seltzer,9,38,0,1,0,USD 2.24,07/20/2026,2027-02-25,Urban Goods Co,beverages,
+W Market,sandwich,7,3 units,0,0,0,USD 7.70,07/18/2026,2027/04/03,Northstar Foods,lunch items,Summer travel season
+Downtown Store,Milk,10,34,0,0,0,$3.79,2026/04/18,Aug 10 2026,QuickMart Distribution,groceries,
+W Market,freezer pizza,7,12,0,0,0,$8.05,2026/08/24,11-Mar-2027,QuickMart Distribution,frozen,
+DT,tea-bags,9,18,0 units,0,0,USD 6.98,26-Jun-2026,2026-10-07,QuickMart Distribution,TEA,Summer travel season
+East-Corner,sparkling h2o,15,30,0,0,0,$2.36,11-Jul-2026,2027/03/08,FreshLine Supply,beverages,
+west,coke bottle,23,40,0,0,0,$1.93,Jun 19 2026,02/10/2026,FreshLine Supply,soda,Father's Day
+westside,Milk,11,33,0,0 units,0,$3.73,07/29/2026,2027-04-27,Northstar Foods,groceries,Summer travel season
+east,Sandwich Packs,8,3,0,0 units,0,$7.60,Jul 31 2026,2026-11-12,Northstar Foods,lunch items,Summer travel season
+E Corner,Pop Corn,10,33,5,0,0,$2.36,2026-05-29,11/03/2026,FreshLine Supply,snacks,
+Southside,pepsi bottle,31,26,0,0,0,USD 1.77,22-Mar-2026,12/01/2027,FreshLine Supply,soda,March Madness
+East Corner,EnergyDrink,14,18,5,0,0,USD 3.55,29/09/2026,04/24/2027,Northstar Foods,beverages,
+AIR,checkout cups,4,35,0,0,0 units,USD 5.73,2026-04-19,22/11/2026,Northstar Foods,checkout supplies,
+W Market,EnergyDrink,10,29,0,0,0,$3.52,Aug 22 2026,2027/06/08,Metro Wholesale,beverages,
+Downtown Store,COFFEE beans,16,24,0,0,0,USD 14.52,09/05/2026,16/02/2027,Urban Goods Co,coffee,Back-to-school season
+South Shop,chocolate,20 units,18,0,0,0,$1.99,2026/09/12,20/04/2027,FreshLine Supply,candy,Back-to-school season
+north shop,ENERGY,11,21 units,0,0,0,$3.73,09/20/2026,2027/01/18,Northstar Foods,beverages,
+south shop,paper bags,29,80,0 units,0,0,$0.21,2026/09/14,2026-10-17,FreshLine Supply,checkout supplies,
+NORTH_SIDE,COFFEE beans,10,19,1,0,0,$13.24,2026-06-11,2027-01-02,Northstar Foods,coffee,Graduation season
+Downtown-01,OATMILK 1L,8,28,0,0,0 units,$4.64,22-Sep-2026,20-Nov-2026,Northstar Foods,groceries,
+eastside,espresso-pods,11 units,26,5,0,0 units,$9.32,03/10/2026,12/11/2026,Metro Wholesale,coffee,
+North Side,Candy,10,27,0,0,0,$4.06,2026/06/11,Jan 05 2027,Northstar Foods,candy,Graduation season
+Airport-Kiosk,Notebook,7,35,0,0,0,$3.33,27-Sep-2026,Oct 27 2026,Urban Goods Co,stationery,
+AIR,gift-card,7 units,0,0 units,0,0,USD 24.72,04/05/2026,2026-09-10,QuickMart Distribution,gifts,
+Southside,coffee bean,11,32,0,0,0,"13,15",Jul 26 2026,02/22/2027,Northstar Foods,coffee,Summer travel season
+downtown,EGGS,4,16 units,0 units,0,0,$4.77,10/06/2026,07/20/2027,Metro Wholesale,groceries,
+South Shop,cups paper,8,11,0,0,0,"5,89",04/30/2026,14/09/2026,Metro Wholesale,checkout supplies,
+DT,pepsi 500 ml,23,39,0,0,0,$1.80,07-Jun-2026,2027-02-05,Metro Wholesale,soda,Graduation season
+DT,Espresso Pods,5,18,0 units,0,3,USD 10.03,22/04/2026,2027-02-03,Metro Wholesale,coffee,
+west,whole milk,13,14,0 units,0,0,$4.10,Mar 19 2026,2026-11-06,Metro Wholesale,groceries,March Madness
+West Market,ESP pods,8,21,0,0,0,$9.66,24/08/2026,28-Apr-2027,QuickMart Distribution,coffee,Back-to-school season
+NORTH_SIDE,frozen-fries,10,0 units,5,4,1,$4.70,04/16/2026,23-Oct-2026,Northstar Foods,frozen,
+south shop,energy can,12 units,35,0,0,0 units,"3,65",Sep 06 2026,Mar 03 2027,QuickMart Distribution,beverages,
+northside,paper-cups,4,22,2,0,0,$5.69,06/16/2026,03/05/2027,Metro Wholesale,checkout supplies,
+westside,Coffee-Beans,13,33,0,0 units,0,$14.05,02/03/2026,16-Aug-2026,Metro Wholesale,coffee,
+northside,energy-drink,8,20,0,0,1,USD 3.61,2026-06-03,2026/09/09,Urban Goods Co,beverages,
+North,nacho chips,9,33,5,0,0,USD 3.29,2026-10-02,2027/06/11,FreshLine Supply,chips,
+south,PRETZELS,7,34,0,0,0,$2.61,2026-09-15,2027/02/04,Urban Goods Co,snacks,
+airport,holiday mug,8,15,0,0,0,$8.77,2026-03-22,02-Sep-2026,Northstar Foods,seasonal items,
+E Corner,pepsi bottle,16,38,0 units,0,0,$1.83,09/20/2026,Jun 12 2027,QuickMart Distribution,SODA,
+airport,fries frozen,3,9,0,0,0,$5.28,May 07 2026,Feb 21 2027,Metro Wholesale,frozen,
+E Corner,seltzer,14,14,0,0,0,$2.38,12-Oct-2026,2027/01/03,FreshLine Supply,beverages,
+E Corner,choc bars,11,36,0 units,0 units,0,$1.81,30-Sep-2026,03/27/2027,Metro Wholesale,candy,
+East Corner,pepsi 500 ml,21,51,0,0,2,$1.99,31-May-2026,Aug 15 2026,Urban Goods Co,soda,Graduation season
+NORTH_SIDE,paper-cups,8,27 units,0,0,0,USD 6.00,04/10/2026,02/01/2027,Urban Goods Co,checkout supplies,
+North Side,pepsi 500 ml,21,38,0,0,0 units,$1.85,2026/07/09,01/01/2027,Urban Goods Co,soda,Summer travel season
+airport,school notebook,-10,9,0,0,0,"2,86",12/05/2026,2026-06-23,Northstar Foods,stationery,
+west,pepsi bottle,17,53,0,0,0,"1,81",23/04/2026,2026/05/25,Northstar Foods,soda,
+south,Coffee-Beans,12,25,2,0,0,$12.14,11-Jun-2026,02/01/2027,Northstar Foods,coffee,Graduation season
+south shop,BREAD,5,25,0,0,0,$3.89,20/08/2026,03/26/2027,Urban Goods Co,GROCERIES,
+eastside,EnergyDrink,13,30,0,0,0,$3.23,04/07/2026,10-Sep-2026,QuickMart Distribution,beverages,
+eastside,school notebook,11,21,0,0,0,$3.04,05/18/2026,2026/09/15,Northstar Foods,stationery,
+S-Shop,cereal box,3,22,0,0,0 units,$5.75,2026-06-15,2026/08/08,Metro Wholesale,groceries,
+terminal shop,PEPSI .5L,20,37,0,0,0,$1.98,22-Jun-2026,2026-08-28,Urban Goods Co,soda,Summer travel season
+south shop,notebooks,7,missing,0,0,0,USD 3.10,27/09/2026,05-Dec-2026,QuickMart Distribution,stationery,
+Downtown-01,pencils,7,23 units,0,0,0,$2.12,2026-04-16,30/11/2026,Metro Wholesale,stationery,
+S-Shop,sandwich pack,9,1,0,0,0,"7,52",17-Aug-2026,2027-02-11,Urban Goods Co,lunch items,Back-to-school season
+eastside,paper bags,31,75,0,0,0,$0.21,Oct 09 2026,05/15/2027,QuickMart Distribution,checkout supplies,
+Downtown-01,tea bag,8,24,0,0,0,$7.16,2026-08-09,01/01/2027,Northstar Foods,tea,Back-to-school season
+downtown,coca cola 500ml,19,-39,0,0,1,$1.89,Apr 21 2026,14-Jul-2026,Metro Wholesale,soda,
+West Market,Sandwich Packs,8,11,0,0,0 units,"7,16",2026-10-14,2026/12/15,QuickMart Distribution,lunch items,
+airport,PEPSI .5L,16,56,0,1,0,$1.95,2026-06-22,27/10/2026,QuickMart Distribution,soda,Summer travel season
+airport,granola-bars,7,28,0 units,0,0,$5.34,28-Sep-2026,03/15/2027,FreshLine Supply,lunch items,
+south shop,checkout cups,6,32,0,0 units,0,USD 5.98,14/05/2026,2026-12-12,Urban Goods Co,checkout supplies,
+Airport Kiosk,notebooks,12,19,0,0 units,0,$3.23,2026/05/18,2026/09/27,Urban Goods Co,STATIONERY,
+E Corner,holiday mug,9,0,0,0,0,$9.98,2026-05-29,01-Mar-2027,Northstar Foods,seasonal items,Graduation season
+E Corner,holiday mug,9,0,0,0,0,$9.98,2026-05-29,01-Mar-2027,Northstar Foods,seasonal items,Graduation season
+terminal shop,tort chips,15,28,0,0,0,$3.27,26/06/2026,Dec 28 2026,FreshLine Supply,chips,Summer travel season
+Downtown-01,sandwich pack,8,10,0,0,0,$7.62,2026/09/25,2027-03-02,FreshLine Supply,lunch items,
+Downtown Store,cups paper,9,29 units,0,0,3,$5.57,09/12/2026,2027/03/27,QuickMart Distribution,checkout supplies,
+south shop,seltzer,13,37,0,0,0 units,$2.30,2026/10/15,01/08/2027,QuickMart Distribution,beverages,
+downtown,sparkling h2o,13 units,36,0,0,0,$2.14,2026-10-02,2026/12/22,Northstar Foods,beverages,
+Airport-Kiosk,sweet packs,14,26,0,0,0,"3,77",2026-06-15,03/31/2027,FreshLine Supply,candy,Graduation season
+south shop,tortilla-chip,12 units,25,0,0 units,0,$3.05,Jul 07 2026,19-Oct-2026,QuickMart Distribution,chips,Summer travel season
+downtown,Potato Chips,26,18,0,0,2,$3.11,03/21/2026,09-Jun-2026,Metro Wholesale,chips,March Madness
+AIR,PEPSI .5L,22 units,36,5,0,0,$2.01,12/06/2026,2026-08-15,Metro Wholesale,soda,Graduation season
+Airport Kiosk,cereal box,3,10 units,1,0,0,USD 5.63,11-Jun-2026,09/22/2026,Urban Goods Co,groceries,
+north shop,candy-pack,9,26,0,0,0 units,$4.27,2026/09/23,23/05/2027,Northstar Foods,candy,
+Airport Kiosk,Lunch Box,8,23,0,0,0,$10.48,20/08/2026,Feb 13 2027,Urban Goods Co,lunch items,Back-to-school season
+DT,TEA BAGS,-9,20,0,0,0,$6.26,28/04/2026,2026-06-27,Urban Goods Co,tea,
+AIR,milk 1L,14,7,0,0,0,$4.12,04/08/2026,05/21/2026,FreshLine Supply,groceries,
+AIR,pencils,14,24,0,0,0,$2.22,06-Oct-2026,25/07/2027,Urban Goods Co,stationery,
+West-Market,water bottle,22,41,0 units,0,0,$1.64,May 02 2026,24-Oct-2026,QuickMart Distribution,beverages,
+eastside,EGGS,6,13,0,0,2 units,$4.84,04-Apr-2026,2026/10/14,Urban Goods Co,groceries,
+DT,crisps,17,49,3,0,0,$3.08,2026/04/22,05-Jul-2026,QuickMart Distribution,chips,
+AIR,gift-card,6,18,0,0,0,USD 24.97,2026/08/03,09-Oct-2026,Urban Goods Co,gifts,
+Airport Kiosk,Tortilla Chips,13,35,0,0,0,USD 3.26,2026-07-17,2026-09-06,Urban Goods Co,chips,Summer travel season
+Airport-Kiosk,freezer fries,10,12,0,0,0 units,$5.10,07/18/2026,28-Dec-2026,Metro Wholesale,frozen,
+South Shop,bread loaf,11,16,0 units,0,0,$3.50,Oct 04 2026,Mar 26 2027,Urban Goods Co,groceries,
+East-Corner,sparkling h2o,5,45,0,0,0,$2.39,2026/08/17,16/02/2027,Metro Wholesale,beverages,
+westside,Pretzels,11,24,0 units,0,0,USD 2.98,2026-06-24,03-Feb-2027,FreshLine Supply,snacks,
+AIR,lunch boxes,6,16,0,4,0,$9.83,2026-06-17,22/07/2026,Metro Wholesale,lunch items,
+Southside,energy can,12,35,0,0,0,USD 3.88,08/31/2026,21/04/2027,QuickMart Distribution,beverages,
+East Corner,Sandwich Packs,5,25,0,0,0,$6.55,2026-07-19,08-Feb-2027,Northstar Foods,lunch items,Summer travel season
+W Market,BREAD,7,13,0,0,0,"3,39",10-Aug-2026,01/23/2027,Urban Goods Co,groceries,
+Downtown Store,cups paper,6,34,0,4,0,$5.54,2026-03-13,Oct 31 2026,FreshLine Supply,checkout supplies,
+eastside,bread loaf,12,14,0,0,0,$3.26,2026-06-02,03-Aug-2026,Urban Goods Co,groceries,
+westside,cups paper,6,-13,0,0 units,0 units,$5.70,11-Jul-2026,Oct 29 2026,Metro Wholesale,checkout supplies,
+South Shop,oat milk,5,21,0,0,0,$4.07,2026-04-18,21-May-2026,Metro Wholesale,groceries,
+eastside,PEPSI .5L,21,48,0,0,0,USD 1.91,2026-08-24,Jun 07 2027,QuickMart Distribution,soda,Back-to-school season
+south shop,H2O bottle,36 units,40,0,0,0 units,$1.38,Apr 04 2026,2026-07-25,Urban Goods Co,beverages,March Madness
+west,candy-pack,18 units,30,0,0,0,$4.18,13-Aug-2026,11/26/2026,Northstar Foods,candy,Back-to-school season
+North,note-books,4,30,0,0,0,$2.87,2026/09/13,03/03/2027,Metro Wholesale,stationery,
+Airport Kiosk,CEREAL,3,12,0,0,0,"5,57",19/03/2026,10/24/2026,FreshLine Supply,groceries,
+airport,tea-bags,11,19,0,0,0,$7.22,09/08/2026,2027-03-10,QuickMart Distribution,tea,NFL kickoff
+West-Market,paper-cups,6,20,5,0 units,0,$6.56,10/11/2026,2027-03-19,QuickMart Distribution,checkout supplies,
+terminal shop,Spark Water,12,36,0,0,0,$2.37,2026/05/13,21-Sep-2026,Metro Wholesale,beverages,
+AIR,water bottle,31,missing,0,0,0,$1.39,2026/08/23,2027/03/10,Urban Goods Co,beverages,Back-to-school season
+northside,12 eggs,8,11 units,0,0,0,$4.32,12/07/2026,2026-08-18,FreshLine Supply,groceries,
+Southside,Coffee-Beans,9,33,0 units,0,0,$14.17,07/06/2026,12/16/2026,QuickMart Distribution,coffee,Summer travel season
+Downtown-01,Sandwich Packs,5,20,0,0,0,"6,63",2026/04/26,07-Apr-2026,Urban Goods Co,lunch items,
+North,Oat-Milk,2,28,0 units,0,3,"4,06",09-Mar-2026,01-Aug-2026,Northstar Foods,groceries,
+NORTH_SIDE,Lunch Box,-1,0,0,4,1,$10.22,06/05/2026,07/05/2026,Urban Goods Co,lunch items,
+West-Market,energy-drink,15,26,0,0,0,"3,77",Aug 15 2026,2027-04-04,Northstar Foods,beverages,
+east,cereal box,9,23,0,0,2,$5.54,19-May-2026,31-Jan-2027,QuickMart Distribution,groceries,
+S-Shop,Eggs,8,19,0,0,0,USD 4.80,08-May-2026,26/10/2026,FreshLine Supply,groceries,
+W Market,seasonal-mugs,7,24,0,4,0,$9.63,29-Jul-2026,2027-01-06,FreshLine Supply,seasonal items,
+Southside,mugs seasonal,8,3,0,0,0,"8,69",15/03/2026,Aug 03 2026,Metro Wholesale,seasonal items,
+E Corner,nacho chips,10,25,0,0,0,$3.19,10/03/2026,14/02/2027,Northstar Foods,chips,
+West Market,Granola Bars,8,14,0,0,0 units,$4.63,May 04 2026,09/03/2026,Metro Wholesale,lunch items,Cinco de Mayo
+Southside,white bread,4,17,0,0,0,$3.55,2026/07/20,2027/01/28,FreshLine Supply,groceries,
+DT,Eggs,8,11,0,0,0,USD 4.68,10/05/2026,2026/08/13,Urban Goods Co,groceries,
+west,COFFEE beans,10 units,15,0,0,0,$13.35,2026-07-13,2026-12-24,QuickMart Distribution,coffee,Summer travel season
+downtown,EGGS,8,11,0,0,0,$4.91,04/12/2026,05/09/2026,FreshLine Supply,groceries,
+DTWN,tea-bags,10,18,0,0,0,"6,81",05/29/2026,23-Oct-2026,Northstar Foods,tea,Graduation season
+E Corner,white bread,10,14,0,0,0,$3.40,2026/04/26,18-Jun-2026,FreshLine Supply,groceries,
+West Market,H2O bottle,17,44,0,0,0,$1.53,Mar 10 2026,Nov 20 2026,QuickMart Distribution,beverages,
+West-Market,pepsi 500 ml,missing,47,0,0,0,USD 1.77,2026-07-29,11-May-2027,Metro Wholesale,soda,Summer travel season
+North,CocaCola500,26,43,0,0,0,$2.15,21/06/2026,21-Aug-2026,Metro Wholesale,soda,Father's Day
+downtown,frozen-pizza,4,17,0,0,0,$7.64,21-Apr-2026,30/01/2027,FreshLine Supply,frozen,
+West-Market,school pencils,9,31,0,0,0,$2.05,2026/08/04,Oct 25 2026,FreshLine Supply,stationery,
+eastside,Tortilla Chips,16,19,0,0 units,0,$3.43,05/23/2026,03/12/2027,FreshLine Supply,CHIPS,Graduation season
+east,energy can,13,32,0,0,0,$3.45,not-a-date,17/05/2026,Metro Wholesale,beverages,
+east,OATMILK 1L,9,25,0,0,0 units,$4.49,03/31/2026,2027-01-21,Northstar Foods,groceries,March Madness
+airport,Pepsi500,19,38,0,0,0,USD 2.07,2026-09-04,22/06/2027,Urban Goods Co,soda,Back-to-school season
+eastside,choc bars,23,10,0,0 units,0,$1.74,03/25/2026,not-a-date,Metro Wholesale,candy,March Madness
+downtown,ESP pods,9,28,3,0,0,$10.10,May 16 2026,09/25/2026,QuickMart Distribution,coffee,Graduation season
+northside,COFFEE beans,16,29,0,0,0,$11.95,05/31/2026,Nov 23 2026,QuickMart Distribution,coffee,Graduation season
+airport,FrozenPizza,11,8,0,0,0,USD 7.37,06-Mar-2026,09/11/2026,Metro Wholesale,frozen,
+DT,bread loaf,8,30,2,0,2,$3.49,2026/05/28,Feb 16 2027,Urban Goods Co,groceries,
+east,water 500ml,26,55,0,0,0,$1.59,02-Jun-2026,2026-10-12,Metro Wholesale,beverages,Graduation season
+South Shop,Granola Bars,6,27,0,0,0,USD 5.33,08/10/2026,12/02/2026,Northstar Foods,lunch items,
+downtown,energy can,13,18,0 units,0,0,$3.30,2026-05-24,Sep 08 2026,FreshLine Supply,beverages,
+DT,ESP pods,10,21,0,0,0,$9.74,06/13/2026,11/13/2026,Metro Wholesale,coffee,Graduation season
+north shop,Chocolate Bars,16,25,3,2,0,$1.91,Jul 03 2026,11/17/2026,FreshLine Supply,candy,Independence Day
+S-Shop,Seasonal Mug,9,20,0,2,3,$8.63,2026-04-03,11/28/2026,Metro Wholesale,seasonal items,Easter
+West-Market,popcorn bag,8,29,0,1,0,"2,41",Mar 01 2026,Dec 07 2026,Urban Goods Co,snacks,
+North,PEPSI .5L,13,-56,3,0,0,$1.90,07-Oct-2026,2026-11-19,Urban Goods Co,soda,
+S-Shop,oatmilk,3,21,0,0,0,$4.61,Apr 09 2026,29-Dec-2026,QuickMart Distribution,groceries,
+west,Pretzels,8,18,0,0,0,$3.00,2026/06/26,09/17/2026,Northstar Foods,snacks,
+North,Coffee-Beans,14,13,0,0,0 units,USD 12.64,2026-05-22,17/11/2026,FreshLine Supply,coffee,Graduation season
+North Side,snack bars,11,9,0,0,0,USD 4.78,15-Oct-2026,2027/01/30,FreshLine Supply,lunch items,
+south shop,sparkling h2o,10,40,0,0,0,$2.49,01/05/2026,07/30/2026,Northstar Foods,beverages,
+Southside,bags checkout,25,70,0,0,0,$0.22,2026-04-06,2026/12/25,QuickMart Distribution,checkout supplies,
+west,mugs seasonal,8,23,0,0,0,$9.60,05-Aug-2026,29/01/2027,Urban Goods Co,seasonal items,
+westside,COFFEE beans,11,-23,0,0,0,$14.28,Jun 06 2026,07/01/2027,Northstar Foods,coffee,Graduation season
+eastside,energy-drink,14,17 units,0 units,0,0,$3.84,07/09/2026,2026-11-27,Metro Wholesale,beverages,
+northside,sparkling-water,12,21,0,0,0,"2,27",05-Mar-2026,07/26/2026,FreshLine Supply,BEVERAGES,
+westside,lunch sandwich,10,17,0,2,0,"7,14",08/19/2026,21/03/2027,Urban Goods Co,lunch items,Back-to-school season
+northside,lunch sandwich,11,1,0,0 units,0,$6.97,31/08/2026,2027/03/25,QuickMart Distribution,LUNCH-ITEMS,Back-to-school season
+south shop,checkout-bags,23,73,0 units,0,0,$0.21,18-Mar-2026,05/09/2026,Metro Wholesale,checkout supplies,
+west,frozen-pizza,12,2,0,0,2,$7.78,05-Aug-2026,2026/11/17,Metro Wholesale,frozen,Summer travel season
+south shop,checkout cups,missing,9,0,0,0,USD 6.16,31/03/2026,Oct 09 2026,Northstar Foods,checkout supplies,
+West-Market,snack bars,13,7,2,0,0,$5.31,2026/07/10,27-Dec-2026,Urban Goods Co,lunch items,Summer travel season
+West-Market,mugs seasonal,8,23 units,0,0,0,$9.00,02-Apr-2026,Aug 02 2026,FreshLine Supply,seasonal items,Easter
+Downtown Store,PEPSI .5L,17,55,0,0,0 units,$2.00,2026/03/07,14/04/2026,Urban Goods Co,soda,
+Downtown-01,checkout-bags,23,85 units,0,0,3,$0.22,09/07/2026,Apr 29 2027,QuickMart Distribution,checkout supplies,
+south shop,H2O bottle,28,55,0,0,0,$1.53,08/15/2026,Nov 07 2026,Metro Wholesale,beverages,Back-to-school season
+Southside,sparkling h2o,13,17,0,0,0,USD 2.15,25-Jun-2026,10/08/2026,QuickMart Distribution,beverages,
+airport,tortilla-chip,16,19,0,0,0,$3.44,08/23/2026,2026/09/30,Metro Wholesale,chips,Back-to-school season
