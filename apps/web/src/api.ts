@@ -2,6 +2,7 @@ export type Run = {
   id: string;
   user_id: string;
   source_filename: string;
+  workflow_id: string | null;
   status: "queued" | "running" | "completed" | "failed";
   started_at: string | null;
   completed_at: string | null;

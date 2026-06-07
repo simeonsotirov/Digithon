@@ -1,0 +1,16 @@
+FROM node:22-alpine
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+COPY apps/worker/package.json ./apps/worker/package.json
+COPY apps/web/package.json ./apps/web/package.json
+COPY openworkflow.config.ts ./
+COPY openworkflow ./openworkflow
+COPY apps/worker ./apps/worker
+
+RUN npm ci
+
+EXPOSE 3000
+
+CMD ["npm", "run", "openworkflow"]

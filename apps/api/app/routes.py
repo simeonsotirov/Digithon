@@ -9,6 +9,8 @@ from app.schemas import DashboardResponse, Event, IngestRequest, IngestRun
 
 router = APIRouter()
 
+ALLOWED_SEEDED_SOURCES = {"db/seed/messy_sales.csv"}
+
 
 def _demo_user_id() -> str:
     user = db.row("select id from users order by created_at asc limit 1")
@@ -24,6 +26,9 @@ def health() -> dict[str, str]:
 
 @router.post("/ingest", response_model=IngestRun)
 def create_ingest(request: IngestRequest) -> dict:
+    if request.source_filename not in ALLOWED_SEEDED_SOURCES:
+        raise HTTPException(status_code=400, detail="Unsupported ingest source")
+
     run_id = str(uuid4())
     user_id = request.user_id or _demo_user_id()
     created = db.row(

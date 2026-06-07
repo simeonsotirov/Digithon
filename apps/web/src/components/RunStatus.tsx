@@ -30,6 +30,10 @@ export function RunStatus({ run }: Props) {
 
       <code className="text-xs text-slate-500 font-mono">{run.id.slice(0, 8)}</code>
 
+      {run.workflow_id && (
+        <code className="text-xs text-slate-600 font-mono">wf {run.workflow_id.slice(0, 8)}</code>
+      )}
+
       {run.started_at && (
         <span className="text-xs text-slate-500">
           {new Date(run.started_at).toLocaleTimeString()}
