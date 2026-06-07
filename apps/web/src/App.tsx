@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -5,13 +6,14 @@ import { Separator } from "@/components/ui/separator";
 import { EventsTimeline } from "./components/EventsTimeline";
 import { IngestPanel } from "./components/IngestPanel";
 import { KpiCards } from "./components/KpiCards";
+import { LandingPage } from "./components/LandingPage";
 import { RecordsTable } from "./components/RecordsTable";
 import { RunStatus } from "./components/RunStatus";
 import { StoreFilter } from "./components/StoreFilter";
 import { useDashboard, useEvents } from "./queries";
 import { useUiStore } from "./store";
 
-function App() {
+function Dashboard() {
   const { selectedStore, selectedRun, setSelectedStore, setSelectedRun } = useUiStore();
   const dashboard = useDashboard();
   const eventsQuery = useEvents(selectedRun === "all" ? null : selectedRun);
@@ -27,17 +29,13 @@ function App() {
   });
 
   const events =
-    selectedRun !== "all"
-      ? (eventsQuery.data ?? [])
-      : (data?.events ?? []);
+    selectedRun !== "all" ? (eventsQuery.data ?? []) : (data?.events ?? []);
 
   const eventsLoading = selectedRun !== "all" ? eventsQuery.isLoading : loading;
 
   return (
     <div className="min-h-screen bg-[#f5f1e8]">
       <main className="max-w-6xl mx-auto px-5 py-8 space-y-6">
-
-        {/* Hero */}
         <section className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 bg-[#14213d] text-white rounded-3xl p-8 shadow-2xl">
           <div>
             <p className="text-[#fca311] text-xs font-black uppercase tracking-widest mb-2">
@@ -54,7 +52,6 @@ function App() {
           <IngestPanel />
         </section>
 
-        {/* API error */}
         {dashboard.isError && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
@@ -65,15 +62,10 @@ function App() {
           </Alert>
         )}
 
-        {/* Run status */}
         <RunStatus run={latestRun} />
-
-        {/* KPIs */}
         <KpiCards kpis={data?.kpis} loading={loading} />
-
         <Separator />
 
-        {/* Filters */}
         <StoreFilter
           stores={data?.stores ?? []}
           runs={data?.runs ?? []}
@@ -83,30 +75,29 @@ function App() {
           onRunChange={setSelectedRun}
         />
 
-        {/* Main grid */}
         <div className="grid grid-cols-1 lg:grid-cols-[1.7fr_0.8fr] gap-6">
           <Card>
-            <CardHeader>
-              <CardTitle>Normalized Records</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <RecordsTable records={records} loading={loading} />
-            </CardContent>
+            <CardHeader><CardTitle>Normalized Records</CardTitle></CardHeader>
+            <CardContent><RecordsTable records={records} loading={loading} /></CardContent>
           </Card>
-
           <Card>
-            <CardHeader>
-              <CardTitle>Workflow Events</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <EventsTimeline events={events} loading={eventsLoading} />
-            </CardContent>
+            <CardHeader><CardTitle>Workflow Events</CardTitle></CardHeader>
+            <CardContent><EventsTimeline events={events} loading={eventsLoading} /></CardContent>
           </Card>
         </div>
-
       </main>
     </div>
   );
+}
+
+function App() {
+  const [view, setView] = useState<"landing" | "dashboard">("landing");
+
+  if (view === "landing") {
+    return <LandingPage onLaunch={() => setView("dashboard")} />;
+  }
+
+  return <Dashboard />;
 }
 
 export default App;
