@@ -8,6 +8,7 @@ import { EventsTimeline } from "./components/EventsTimeline";
 import { IngestPanel } from "./components/IngestPanel";
 import { KpiCards } from "./components/KpiCards";
 import { LandingPage } from "./components/LandingPage";
+import { PredictionKpiCards } from "./components/PredictionKpiCards";
 import { PredictionsTable } from "./components/PredictionsTable";
 import { RecordsTable } from "./components/RecordsTable";
 import { RunStatus } from "./components/RunStatus";
@@ -21,7 +22,7 @@ function Dashboard() {
   const dashboard = useDashboard();
   const eventsQuery = useEvents(selectedRun === "all" ? null : selectedRun);
   const calendarEvents = useCalendarEvents();
-  const predictions = usePredictions({
+  const predictionsQuery = usePredictions({
     store_id: selectedStore !== "all" ? selectedStore : undefined,
     risk_level: selectedRisk !== "all" ? selectedRisk : undefined,
   });
@@ -85,9 +86,9 @@ function Dashboard() {
 
         {/* Prediction KPI band */}
         <PredictionKpiCards
-          predictions={predictions.data ?? []}
+          predictions={predictionsQuery.data ?? []}
           calendarEvents={calendarEvents.data ?? []}
-          loading={predictions.isLoading || calendarEvents.isLoading}
+          loading={predictionsQuery.isLoading || calendarEvents.isLoading}
         />
 
         <Separator className="border-slate-800" />

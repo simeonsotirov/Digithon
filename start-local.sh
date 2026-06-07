@@ -4,6 +4,8 @@ set -euo pipefail
 SESSION="digiton"
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DATABASE_URL_VALUE="${DATABASE_URL:-postgresql://postgres:postgres@localhost:55432/digithon}"
+DOCKER_DATABASE_URL_VALUE="postgresql://postgres:${POSTGRES_PASSWORD:-postgres}@postgres:5432/digithon"
+POSTGRES_PASSWORD_VALUE="${POSTGRES_PASSWORD:-postgres}"
 DOCKER_SERVICES="postgres migrate openworkflow"
 
 if ! command -v tmux >/dev/null 2>&1; then
@@ -35,14 +37,15 @@ tmux send-keys -t "$SESSION:terminal" "export DATABASE_URL='$DATABASE_URL_VALUE'
 tmux send-keys -t "$SESSION:terminal" "printf 'Digithon local stack\n  API: http://localhost:8000\n  Web: http://localhost:5173\n  OpenWorkflow: http://localhost:3001\n  Postgres: localhost:55432\n\nAttach windows with Ctrl-b n / Ctrl-b p.\n'" C-m
 
 tmux new-window -t "$SESSION" -n "docker" -c "$ROOT_DIR"
+tmux send-keys -t "$SESSION:docker" "export DATABASE_URL='$DOCKER_DATABASE_URL_VALUE' POSTGRES_PASSWORD='$POSTGRES_PASSWORD_VALUE'" C-m
 tmux send-keys -t "$SESSION:docker" "docker compose up -d --build $DOCKER_SERVICES && docker compose ps && docker compose logs -f postgres openworkflow" C-m
 
 tmux new-window -t "$SESSION" -n "api" -c "$ROOT_DIR"
-tmux send-keys -t "$SESSION:api" "export DATABASE_URL='$DATABASE_URL_VALUE'" C-m
+tmux send-keys -t "$SESSION:api" "export DATABASE_URL='$DATABASE_URL_VALUE' POSTGRES_PASSWORD='$POSTGRES_PASSWORD_VALUE'" C-m
 tmux send-keys -t "$SESSION:api" "poetry install && until docker compose exec -T postgres pg_isready -U postgres -d digithon >/dev/null 2>&1; do sleep 1; done && docker compose up migrate && poetry run api" C-m
 
 tmux new-window -t "$SESSION" -n "workers" -c "$ROOT_DIR"
-tmux send-keys -t "$SESSION:workers" "export DATABASE_URL='$DATABASE_URL_VALUE'" C-m
+tmux send-keys -t "$SESSION:workers" "export DATABASE_URL='$DATABASE_URL_VALUE' POSTGRES_PASSWORD='$POSTGRES_PASSWORD_VALUE'" C-m
 tmux send-keys -t "$SESSION:workers" "npm install && until docker compose exec -T postgres pg_isready -U postgres -d digithon >/dev/null 2>&1; do sleep 1; done && npm run worker" C-m
 
 tmux new-window -t "$SESSION" -n "react ui" -c "$ROOT_DIR"
