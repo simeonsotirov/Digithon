@@ -1,120 +1,103 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
-import { createIngest, getDashboard } from "./api";
+import { useState } from "react";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { EventsTimeline } from "./components/EventsTimeline";
+import { IngestPanel } from "./components/IngestPanel";
+import { KpiCards } from "./components/KpiCards";
+import { LandingPage } from "./components/LandingPage";
+import { RecordsTable } from "./components/RecordsTable";
+import { RunStatus } from "./components/RunStatus";
+import { StoreFilter } from "./components/StoreFilter";
+import { useDashboard, useEvents } from "./queries";
 import { useUiStore } from "./store";
 
-function App() {
-  const queryClient = useQueryClient();
+function Dashboard() {
   const { selectedStore, selectedRun, setSelectedStore, setSelectedRun } = useUiStore();
-  const dashboard = useQuery({
-    queryKey: ["dashboard"],
-    queryFn: getDashboard,
-    refetchInterval: 3000,
-  });
-  const ingest = useMutation({
-    mutationFn: createIngest,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["dashboard"] }),
-  });
+  const dashboard = useDashboard();
+  const eventsQuery = useEvents(selectedRun === "all" ? null : selectedRun);
 
   const data = dashboard.data;
+  const loading = dashboard.isLoading;
+  const latestRun = data?.runs[0];
+
   const records = (data?.records ?? []).filter((record) => {
     const storeMatches = selectedStore === "all" || record.store_id === selectedStore;
     const runMatches = selectedRun === "all" || record.run_id === selectedRun;
     return storeMatches && runMatches;
   });
-  const events = (data?.events ?? []).filter(
-    (event) => selectedRun === "all" || event.run_id === selectedRun,
-  );
+
+  const events =
+    selectedRun !== "all" ? (eventsQuery.data ?? []) : (data?.events ?? []);
+
+  const eventsLoading = selectedRun !== "all" ? eventsQuery.isLoading : loading;
 
   return (
-    <main className="shell">
-      <section className="hero">
-        <div>
-          <p className="eyebrow">Messy CSV to durable inventory truth</p>
-          <h1>Digithon Inventory Normalizer</h1>
-          <p>
-            Trigger an ingest run, let the worker normalize chaotic retail exports, and watch the
-            persisted workflow events explain every step.
-          </p>
-        </div>
-        <button disabled={ingest.isPending} onClick={() => ingest.mutate()}>
-          {ingest.isPending ? "Queueing..." : "Ingest messy CSV"}
-        </button>
-      </section>
-
-      {dashboard.isError ? <p className="error">API unavailable. Start `poetry run api`.</p> : null}
-
-      <section className="kpis">
-        <article><span>Raw rows</span><strong>{data?.kpis.total_raw_rows ?? 0}</strong></article>
-        <article><span>Normalized</span><strong>{data?.kpis.total_normalized_rows ?? 0}</strong></article>
-        <article><span>Quality fixes</span><strong>{data?.kpis.quality_issue_count ?? 0}</strong></article>
-        <article><span>Reorders</span><strong>{data?.kpis.reorder_count ?? 0}</strong></article>
-        <article><span>Stockouts</span><strong>{data?.kpis.stockout_count ?? 0}</strong></article>
-      </section>
-
-      <section className="controls">
-        <label>
-          Store
-          <select value={selectedStore} onChange={(event) => setSelectedStore(event.target.value)}>
-            <option value="all">All stores</option>
-            {(data?.stores ?? []).map((store) => (
-              <option key={store.id} value={store.id}>{store.display_name}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Run
-          <select value={selectedRun} onChange={(event) => setSelectedRun(event.target.value)}>
-            <option value="all">All runs</option>
-            {(data?.runs ?? []).map((run) => (
-              <option key={run.id} value={run.id}>{run.status} · {run.id.slice(0, 8)}</option>
-            ))}
-          </select>
-        </label>
-      </section>
-
-      <section className="grid">
-        <div className="panel table-panel">
-          <h2>Normalized Records</h2>
-          <div className="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Store</th><th>Product</th><th>Qty</th><th>Price</th><th>Date</th><th>Signal</th><th>Notes</th>
-                </tr>
-              </thead>
-              <tbody>
-                {records.map((record) => (
-                  <tr key={record.id}>
-                    <td>{record.store_name}</td>
-                    <td>{record.product_name}</td>
-                    <td>{record.quantity}</td>
-                    <td>${Number(record.price).toFixed(2)}</td>
-                    <td>{record.sale_date}</td>
-                    <td><span className={`signal ${record.reorder_signal}`}>{record.reorder_signal}</span></td>
-                    <td>{record.quality_notes.join(", ") || "clean"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+    <div className="min-h-screen bg-[#EFF6FF]">
+      <main className="max-w-6xl mx-auto px-5 py-8 space-y-6">
+        <section className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 bg-[#1E40AF] text-white rounded-3xl p-8 shadow-2xl shadow-[#1E40AF]/25">
+          <div>
+            <p className="text-[#F7B160] text-xs font-black uppercase tracking-widest mb-2">
+              Messy CSV to durable inventory truth
+            </p>
+            <h1 className="text-4xl sm:text-5xl font-black leading-tight mb-3">
+              Digithon Inventory Normalizer
+            </h1>
+            <p className="text-white/70 max-w-lg">
+              Trigger an ingest run, let the worker normalize chaotic retail exports, and watch the
+              persisted workflow events explain every step.
+            </p>
           </div>
-        </div>
+          <IngestPanel />
+        </section>
 
-        <div className="panel timeline-panel">
-          <h2>Workflow Events</h2>
-          <ol className="timeline">
-            {events.map((event) => (
-              <li key={event.id}>
-                <span className={event.status}>{event.status}</span>
-                <strong>{event.step_name}</strong>
-                <small>{event.event_type}</small>
-              </li>
-            ))}
-          </ol>
+        {dashboard.isError && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>API unavailable</AlertTitle>
+            <AlertDescription>
+              Start the backend with <code className="font-mono">poetry run api</code>.
+            </AlertDescription>
+          </Alert>
+        )}
+
+        <RunStatus run={latestRun} />
+        <KpiCards kpis={data?.kpis} loading={loading} />
+        <Separator />
+
+        <StoreFilter
+          stores={data?.stores ?? []}
+          runs={data?.runs ?? []}
+          selectedStore={selectedStore}
+          selectedRun={selectedRun}
+          onStoreChange={setSelectedStore}
+          onRunChange={setSelectedRun}
+        />
+
+        <div className="grid grid-cols-1 lg:grid-cols-[1.7fr_0.8fr] gap-6">
+          <Card>
+            <CardHeader><CardTitle>Normalized Records</CardTitle></CardHeader>
+            <CardContent><RecordsTable records={records} loading={loading} /></CardContent>
+          </Card>
+          <Card>
+            <CardHeader><CardTitle>Workflow Events</CardTitle></CardHeader>
+            <CardContent><EventsTimeline events={events} loading={eventsLoading} /></CardContent>
+          </Card>
         </div>
-      </section>
-    </main>
+      </main>
+    </div>
   );
+}
+
+function App() {
+  const [view, setView] = useState<"landing" | "dashboard">("landing");
+
+  if (view === "landing") {
+    return <LandingPage onLaunch={() => setView("dashboard")} />;
+  }
+
+  return <Dashboard />;
 }
 
 export default App;

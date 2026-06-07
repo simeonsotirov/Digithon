@@ -67,14 +67,24 @@ export async function getDashboard() {
   return response.json() as Promise<Dashboard>;
 }
 
-export async function createIngest() {
+export async function getRuns(): Promise<Run[]> {
+  const response = await fetch(`${apiBase}/runs`);
+  if (!response.ok) throw new Error("Failed to load runs");
+  return response.json();
+}
+
+export async function getEvents(runId: string): Promise<Event[]> {
+  const response = await fetch(`${apiBase}/events?run_id=${encodeURIComponent(runId)}`);
+  if (!response.ok) throw new Error("Failed to load events");
+  return response.json();
+}
+
+export async function createIngest(): Promise<Run> {
   const response = await fetch(`${apiBase}/ingest`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ source_filename: "db/seed/messy_sales.csv" }),
   });
-  if (!response.ok) {
-    throw new Error("Failed to create ingest run");
-  }
-  return response.json() as Promise<Run>;
+  if (!response.ok) throw new Error("Failed to create ingest run");
+  return response.json();
 }

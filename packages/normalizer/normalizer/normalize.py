@@ -180,7 +180,15 @@ def normalize_row(row: dict[str, Any], source_row_number: int) -> NormalizedReco
 def normalize_csv(path: Path) -> list[NormalizedRecord]:
     with path.open(newline="", encoding="utf-8") as handle:
         reader = csv.DictReader(handle)
-        return [normalize_row(row, index) for index, row in enumerate(reader, start=1)]
+        records: list[NormalizedRecord] = []
+        seen_hashes: set[str] = set()
+        for index, row in enumerate(reader, start=1):
+            record = normalize_row(row, index)
+            if record.source_row_hash in seen_hashes:
+                continue
+            seen_hashes.add(record.source_row_hash)
+            records.append(record)
+        return records
 
 
 def main() -> None:
