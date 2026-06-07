@@ -3,6 +3,7 @@ import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { RowsByStore, RecentRuns, WorkflowEventCounts } from "./components/AnalyticsPanels";
 import { EventsTimeline } from "./components/EventsTimeline";
 import { IngestPanel } from "./components/IngestPanel";
 import { KpiCards } from "./components/KpiCards";
@@ -121,6 +122,47 @@ function Dashboard() {
             <CardContent><EventsTimeline events={events} loading={eventsLoading} /></CardContent>
           </Card>
         </div>
+
+        {/* Analytics row */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6">
+          <Card className="rounded-2xl border-slate-800 bg-slate-900/80">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-slate-50 text-sm font-semibold uppercase tracking-[0.15em]">
+                Rows by Store
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <RowsByStore
+                records={data?.records ?? []}
+                stores={data?.stores ?? []}
+                loading={loading}
+              />
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-2xl border-slate-800 bg-slate-900/80">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-slate-50 text-sm font-semibold uppercase tracking-[0.15em]">
+                Recent Runs
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <RecentRuns runs={data?.runs ?? []} loading={loading} />
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-2xl border-slate-800 bg-slate-900/80">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-slate-50 text-sm font-semibold uppercase tracking-[0.15em]">
+                Events by Step
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <WorkflowEventCounts events={data?.events ?? []} loading={loading} />
+            </CardContent>
+          </Card>
+        </div>
+
       </main>
     </div>
   );

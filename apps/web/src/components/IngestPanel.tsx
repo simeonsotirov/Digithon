@@ -2,19 +2,13 @@ import { useRef, useState } from "react";
 import { AlertCircle, CloudUpload, ExternalLink, Play } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { IngestSource } from "../api";
 import { useIngestMutation } from "../queries";
 
-type Mode = "seed" | "file" | "drive";
-
-const MODES: { id: Mode; label: string }[] = [
-  { id: "seed", label: "Demo CSV" },
-  { id: "file", label: "Upload File" },
-  { id: "drive", label: "Google Drive" },
-];
-
 export function IngestPanel() {
-  const [mode, setMode] = useState<Mode>("seed");
+  const [tab, setTab] = useState("seed");
   const [file, setFile] = useState<File | null>(null);
   const [driveId, setDriveId] = useState("");
   const [dragging, setDragging] = useState(false);
@@ -25,7 +19,7 @@ export function IngestPanel() {
     e.preventDefault();
     setDragging(false);
     const f = e.dataTransfer.files[0];
-    if (f) { setFile(f); setMode("file"); }
+    if (f) { setFile(f); setTab("file"); }
   }
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -35,87 +29,82 @@ export function IngestPanel() {
 
   function submit() {
     let source: IngestSource;
-    if (mode === "file" && file) source = { type: "file", file };
-    else if (mode === "drive" && driveId.trim()) source = { type: "drive", driveId: driveId.trim() };
+    if (tab === "file" && file) source = { type: "file", file };
+    else if (tab === "drive" && driveId.trim()) source = { type: "drive", driveId: driveId.trim() };
     else source = { type: "seed" };
     ingest.mutate(source);
   }
 
   const canSubmit =
     !ingest.isPending &&
-    (mode === "seed" ||
-      (mode === "file" && file !== null) ||
-      (mode === "drive" && driveId.trim() !== ""));
+    (tab === "seed" ||
+      (tab === "file" && file !== null) ||
+      (tab === "drive" && driveId.trim() !== ""));
 
   return (
     <div className="w-full sm:w-80 flex flex-col gap-3">
-      {/* Mode tabs */}
-      <div className="flex rounded-xl border border-slate-700 overflow-hidden text-xs font-bold">
-        {MODES.map(({ id, label }) => (
-          <button
-            key={id}
-            onClick={() => setMode(id)}
-            className={`flex-1 py-2 transition-colors ${
-              mode === id
-                ? "bg-cyan-400/20 text-cyan-300"
-                : "text-slate-400 hover:text-slate-200"
+      <Tabs value={tab} onValueChange={setTab}>
+        <TabsList className="w-full bg-slate-800 border border-slate-700">
+          <TabsTrigger value="seed" className="flex-1 data-[state=active]:bg-cyan-400/20 data-[state=active]:text-cyan-300 text-slate-400 text-xs font-bold">
+            Demo CSV
+          </TabsTrigger>
+          <TabsTrigger value="file" className="flex-1 data-[state=active]:bg-cyan-400/20 data-[state=active]:text-cyan-300 text-slate-400 text-xs font-bold">
+            Upload File
+          </TabsTrigger>
+          <TabsTrigger value="drive" className="flex-1 data-[state=active]:bg-cyan-400/20 data-[state=active]:text-cyan-300 text-slate-400 text-xs font-bold">
+            Google Drive
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="seed" className="mt-0" />
+
+        <TabsContent value="file" className="mt-0">
+          <div
+            onDrop={handleDrop}
+            onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+            onDragLeave={() => setDragging(false)}
+            onClick={() => fileRef.current?.click()}
+            className={`rounded-2xl border border-dashed p-5 text-center cursor-pointer transition-colors ${
+              dragging
+                ? "border-cyan-400 bg-cyan-400/15"
+                : "border-cyan-400/30 bg-cyan-400/5 hover:bg-cyan-400/10"
             }`}
           >
-            {label}
-          </button>
-        ))}
-      </div>
+            <input
+              ref={fileRef}
+              type="file"
+              accept=".csv,.xlsx,.xls"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+            <CloudUpload className="mx-auto mb-2 h-7 w-7 text-cyan-400/60" />
+            {file ? (
+              <p className="text-sm font-semibold text-cyan-300 truncate">{file.name}</p>
+            ) : (
+              <>
+                <p className="text-sm font-semibold text-slate-300">Drop CSV or XLSX here</p>
+                <p className="text-xs text-slate-500 mt-1">or click to browse</p>
+              </>
+            )}
+          </div>
+        </TabsContent>
 
-      {/* File dropzone */}
-      {mode === "file" && (
-        <div
-          onDrop={handleDrop}
-          onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
-          onDragLeave={() => setDragging(false)}
-          onClick={() => fileRef.current?.click()}
-          className={`rounded-2xl border border-dashed p-5 text-center cursor-pointer transition-colors ${
-            dragging
-              ? "border-cyan-400 bg-cyan-400/15"
-              : "border-cyan-400/30 bg-cyan-400/5 hover:bg-cyan-400/10"
-          }`}
-        >
-          <input
-            ref={fileRef}
-            type="file"
-            accept=".csv,.xlsx,.xls"
-            className="hidden"
-            onChange={handleFileChange}
-          />
-          <CloudUpload className="mx-auto mb-2 h-7 w-7 text-cyan-400/60" />
-          {file ? (
-            <p className="text-sm font-semibold text-cyan-300 truncate">{file.name}</p>
-          ) : (
-            <>
-              <p className="text-sm font-semibold text-slate-300">Drop CSV or XLSX here</p>
-              <p className="text-xs text-slate-500 mt-1">or click to browse</p>
-            </>
-          )}
-        </div>
-      )}
+        <TabsContent value="drive" className="mt-0">
+          <div className="flex flex-col gap-1.5">
+            <Input
+              value={driveId}
+              onChange={(e) => setDriveId(e.target.value)}
+              placeholder="Paste Google Drive link or file ID"
+              className="border-slate-700 bg-slate-900 text-slate-200 placeholder:text-slate-500 focus-visible:ring-cyan-400/50"
+            />
+            <p className="text-xs text-slate-500 flex items-center gap-1">
+              <ExternalLink className="h-3 w-3 shrink-0" />
+              Share link or file ID from Google Drive
+            </p>
+          </div>
+        </TabsContent>
+      </Tabs>
 
-      {/* Google Drive input */}
-      {mode === "drive" && (
-        <div className="flex flex-col gap-1.5">
-          <input
-            type="text"
-            value={driveId}
-            onChange={(e) => setDriveId(e.target.value)}
-            placeholder="Paste Google Drive link or file ID"
-            className="w-full rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-cyan-400/60 transition-colors"
-          />
-          <p className="text-xs text-slate-500 flex items-center gap-1">
-            <ExternalLink className="h-3 w-3 shrink-0" />
-            Share link or file ID from Google Drive
-          </p>
-        </div>
-      )}
-
-      {/* Submit */}
       <Button
         size="lg"
         disabled={!canSubmit}
