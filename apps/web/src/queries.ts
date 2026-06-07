@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { createIngest, getDashboard, getEvents, getRuns } from "./api";
+import { type IngestSource, createIngest, getCalendarEvents, getDashboard, getEvents, getPredictions, getRuns } from "./api";
 
 export function useDashboard() {
   return useQuery({
@@ -27,10 +27,26 @@ export function useEvents(runId: string | null) {
   });
 }
 
+export function useCalendarEvents() {
+  return useQuery({
+    queryKey: ["calendar-events"],
+    queryFn: () => getCalendarEvents(),
+    refetchInterval: 60_000,
+  });
+}
+
+export function usePredictions(params?: { run_id?: string; store_id?: string; risk_level?: string }) {
+  return useQuery({
+    queryKey: ["predictions", params],
+    queryFn: () => getPredictions(params),
+    refetchInterval: 5000,
+  });
+}
+
 export function useIngestMutation() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: createIngest,
+    mutationFn: (source: IngestSource = { type: "seed" }) => createIngest(source),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
       queryClient.invalidateQueries({ queryKey: ["runs"] });
