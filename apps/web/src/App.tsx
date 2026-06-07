@@ -34,11 +34,11 @@ function Dashboard() {
   const eventsLoading = selectedRun !== "all" ? eventsQuery.isLoading : loading;
 
   return (
-    <div className="min-h-screen bg-[#f5f1e8]">
+    <div className="min-h-screen bg-[#EFF6FF]">
       <main className="max-w-6xl mx-auto px-5 py-8 space-y-6">
-        <section className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 bg-[#14213d] text-white rounded-3xl p-8 shadow-2xl">
+        <section className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 bg-[#1E40AF] text-white rounded-3xl p-8 shadow-2xl shadow-[#1E40AF]/25">
           <div>
-            <p className="text-[#fca311] text-xs font-black uppercase tracking-widest mb-2">
+            <p className="text-[#F7B160] text-xs font-black uppercase tracking-widest mb-2">
               Messy CSV to durable inventory truth
             </p>
             <h1 className="text-4xl sm:text-5xl font-black leading-tight mb-3">

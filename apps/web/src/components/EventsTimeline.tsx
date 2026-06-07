@@ -31,7 +31,7 @@ export function EventsTimeline({ events, loading }: Props) {
     <ScrollArea className="h-[420px]">
       <ol className="space-y-3">
         {events.map((event) => (
-          <li key={event.id} className="border-l-4 border-[#fca311] pl-3 grid gap-1">
+          <li key={event.id} className="border-l-4 border-[#3B82F6] pl-3 grid gap-1">
             <time className="text-xs text-muted-foreground">
               {new Date(event.created_at).toLocaleTimeString()}
             </time>
