@@ -34,7 +34,423 @@ The first priority is a fully working end-to-end MVP. If time remains after the 
 7. Do not add auth, RLS, realtime, ML, broad connector frameworks, or multi-page navigation until the MVP works end to end.
 8. For inventory prediction, start with deterministic event-aware rules and seeded calendar data before adding external APIs or ML.
 
+## Current Local Implementation Snapshot
+
+This section is the active single source of truth for what exists in the local codebase right now. Future expansion ideas remain in later sections only when they do not contradict these contracts.
+
+Implemented locally:
+
+```text
+backend:
+- FastAPI app under apps/api
+- POST /ingest accepts the seeded source contract only: source_filename + optional user_id
+- GET /runs
+- GET /runs/{run_id}
+- GET /events?run_id=...
+- GET /dashboard
+- GET /calendar-events?from_date=...&to_date=...&limit=...
+- GET /predictions?run_id=...&store_id=...&limit=...
+
+database:
+- calendar_events table exists and is seeded by migrations 003 and 004
+- inventory_predictions table exists in migration 005 using the current event-reorder recommendation contract
+
+frontend:
+- React Query API helpers exist for dashboard, runs, events, calendar events, predictions, and ingest
+- Dashboard has upcoming events and prediction panels wired toward FastAPI data
+```
+
+Current seeded ingest request contract:
+
+```text
+IngestRequest:
+- source_filename: str = "db/seed/messy_sales.csv"
+- user_id: str | None
+```
+
+Current prediction contract:
+
+```text
+InventoryPrediction:
+- id
+- run_id
+- store_id
+- store_name
+- calendar_event_id
+- event_name
+- product_name
+- baseline_quantity
+- available_stock
+- predicted_quantity
+- uplift_multiplier
+- recommended_reorder_quantity
+- confidence: low | medium | high
+- reasons
+- created_at
+```
+
+Important cleanup note: `apps/web/src/api.ts` currently contains duplicate calendar event and prediction type definitions from two competing contracts. Clean this by keeping the current prediction contract above unless the team intentionally migrates the database/API/frontend together.
+
 ## Source Ingestion
+
+### Canonical End-To-End Product Process
+
+This is the product process developers should implement and demo. Keep every step visible through persisted state, workflow events, and the ShadCN dashboard.
+
+```text
+React/ShadCN UI
+  -> user chooses source: local CSV/XLSX, Google Drive link/id, or seeded demo data
+  -> FastAPI POST /ingest validates source metadata
+  -> ingest_runs row is created with status = queued
+  -> OpenWorkflow worker claims the queued run
+  -> worker resolves and fetches the source if needed
+  -> worker parses the file into generic row dictionaries
+  -> raw_data stores the exact parsed rows for auditability
+  -> normalizer maps raw rows into our supported canonical dataset
+  -> normalized_data stores validated normalized records
+  -> predictor reads normalized_data + calendar_events
+  -> inventory_predictions stores explainable store/product stock needs
+  -> FastAPI read endpoints expose dashboard data
+  -> React Query fetches the data
+  -> ShadCN dashboard displays ingest status, raw/normalized KPIs, records, events, upcoming demand events, and predicted stock needs
+```
+
+Developer implementation rule: do not skip directly from upload to normalized records. The raw rows must be persisted first, the normalizer must produce our canonical dataset shape, the predictor must operate on normalized data rather than the original customer file shape, and the frontend must read persisted API data rather than calculating server state in the browser.
+
+#### Step 1 - UI Source Selection
+
+The user starts from the one-screen React dashboard. Use ShadCN primitives and custom wrappers composed from ShadCN.
+
+Supported source actions:
+
+```text
+Upload CSV/XLSX
+Paste Google Drive file link or file id
+Run seeded demo file
+```
+
+The UI should present these as one `IngestPanel`, not as separate pages. Local upload and seeded file should be the reliable demo path. Google Drive should be available if implemented, but it must not block the core demo.
+
+Recommended ShadCN composition:
+
+```text
+IngestPanel:
+- Card
+- CardHeader
+- CardContent
+- Button
+- Input
+- Alert
+- Skeleton when mutation/refetch is pending
+```
+
+UI rules:
+
+1. Disable ingest controls while an ingest mutation is pending.
+2. Show a clear queued/running/completed/failed run status after submission.
+3. Trigger React Query invalidation/refetch for `/dashboard`, `/runs`, and `/events` after creating an ingest run.
+4. Do not store uploaded results, normalized records, events, or predictions in Zustand.
+5. Zustand may store only selected source mode, selected store, selected run, selected confidence filter if implemented, and local panel state.
+
+#### Step 2 - FastAPI Creates The Run
+
+FastAPI owns request validation and run creation. It should not parse, normalize, predict, or persist raw rows inside the request handler.
+
+Future expanded request shape after local upload and Google Drive are implemented:
+
+```text
+IngestRequest:
+- source_type: Literal['csv_upload', 'xlsx_upload', 'google_drive', 'seeded_file']
+- source_filename: str | None
+- source_uri: str | None
+- source_mime_type: str | None
+- user_id: str | None
+```
+
+Current MVP compatibility rule: the local implementation currently accepts only `source_filename` plus optional `user_id`, and only allows `db/seed/messy_sales.csv`. Keep this seeded demo path working while extending the contract. Do not break the seeded demo path.
+
+API behavior:
+
+1. Current local behavior: validate `source_filename` against the allowed seeded source list.
+2. Future behavior: validate `source_type` and source metadata for upload and Google Drive sources.
+3. Resolve the demo user if `user_id` is omitted.
+4. Insert an `ingest_runs` row with `status = 'queued'`.
+5. Append or allow the worker to append a `run_created` event.
+6. Return the typed `IngestRun` response immediately.
+
+#### Step 3 - Workflow Claims And Resolves Source
+
+OpenWorkflow owns execution. The worker claims queued runs and transitions the run to `running`.
+
+Source resolution rules:
+
+```text
+seeded_file:
+- Resolve to a repository seed path.
+- No external network dependency.
+
+csv_upload / xlsx_upload:
+- Resolve to the uploaded file location.
+- Parse by MIME type or extension.
+- For MVP, local temporary file storage is acceptable if documented.
+
+google_drive:
+- Accept a link or file id.
+- Fetch/export the file to a parseable CSV/XLSX format if feasible.
+- If Google Drive blocks progress, mark the event failed and keep seeded/local ingest working.
+```
+
+Required events:
+
+```text
+claim_run
+source_received
+source_resolved
+source_fetched
+```
+
+#### Step 4 - Parse Into Generic Raw Rows
+
+Parsing converts all source types into one internal shape:
+
+```text
+list[dict[str, JSON-safe value]]
+```
+
+Rules:
+
+1. CSV, XLSX, and Google Drive exports must produce the same row-list shape before raw persistence.
+2. Convert pandas/numpy values into JSON-safe values before database insertion.
+3. Preserve original column names and values in `raw_payload`.
+4. Do not discard messy values just because they are invalid; store them raw and let normalization add quality notes.
+5. Return counts, ids, or references from workflow steps instead of large DataFrames.
+
+Required event:
+
+```text
+parse_tabular_data / tabular_data_parsed
+```
+
+#### Step 5 - Persist Raw Data First
+
+Every parsed row must be stored in `raw_data` before normalization.
+
+Raw persistence contract:
+
+```text
+raw_data:
+- user_id
+- run_id
+- source_filename
+- source_row_number
+- source_row_hash
+- raw_payload
+```
+
+Idempotency rule:
+
+```text
+unique (run_id, source_row_hash)
+```
+
+This is required for auditability, retry safety, and the crash/resume demo. If the worker dies after raw persistence, restarting it must not duplicate raw rows.
+
+Required event:
+
+```text
+store_raw_rows / raw_rows_stored
+```
+
+#### Step 6 - Normalize Into Our Supported Dataset
+
+The normalizer converts customer-specific messy data into the canonical dataset that Digithon supports. Downstream systems should depend on this canonical dataset, not on the original uploaded file shape.
+
+Canonical normalized dataset:
+
+```text
+- raw_data_id
+- run_id
+- store_id
+- canonical_store
+- product_name
+- quantity
+- price
+- sale_date
+- normalized_payload
+- quality_notes
+- reorder_signal
+```
+
+Normalizer responsibilities:
+
+1. Map messy column names to supported concepts such as store, product, quantity, price, and sale date.
+2. Canonicalize store names.
+3. Canonicalize product names.
+4. Parse mixed date formats.
+5. Parse messy prices.
+6. Parse quantities.
+7. Emit quality notes for corrections, defaults, suspicious values, and invalid values.
+8. Emit deterministic current-state `reorder_signal`.
+
+Required events:
+
+```text
+normalize_python / normalization_started
+normalize_python / normalization_completed
+persist_normalized_rows / normalized_rows_stored
+```
+
+Idempotency rule:
+
+```text
+unique (normalized_data.raw_data_id)
+```
+
+#### Step 7 - Predict From Normalized Data
+
+Predictions must run on `normalized_data`, not on raw uploaded rows. This guarantees predictions use the same canonical store/product/date/quantity semantics across CSV, XLSX, Google Drive, and seeded data.
+
+Prediction inputs:
+
+```text
+normalized_data:
+- store_id
+- product_name
+- quantity
+- sale_date
+- reorder_signal
+
+calendar_events:
+- event_name
+- event_type
+- starts_on
+- ends_on
+- impact_score
+- impact_scope
+- product_tags
+```
+
+Prediction output table:
+
+```text
+inventory_predictions:
+- run_id
+- store_id
+- calendar_event_id
+- product_name
+- baseline_quantity
+- available_stock
+- predicted_quantity
+- uplift_multiplier
+- recommended_reorder_quantity
+- confidence
+- reasons
+```
+
+Prediction rules:
+
+1. Compute a baseline from recent normalized rows grouped by store and product.
+2. Match upcoming `calendar_events` by product name or product tag.
+3. Apply deterministic uplift from event type and impact score.
+4. Generate `recommended_reorder_quantity` by comparing predicted demand with available stock.
+5. Generate `confidence` from event impact and input quality.
+6. Store human-readable `reasons` for every prediction.
+7. Persist predictions idempotently so workflow retries do not duplicate rows.
+
+Required events:
+
+```text
+generate_inventory_predictions / prediction_started
+generate_inventory_predictions / predictions_stored
+generate_inventory_predictions / prediction_completed
+```
+
+#### Step 8 - FastAPI Serves Persisted Dashboard Data
+
+The dashboard must read persisted data through FastAPI only.
+
+Required dashboard reads:
+
+```text
+GET /dashboard
+GET /runs
+GET /events?run_id=...
+GET /calendar-events
+GET /predictions
+```
+
+`GET /dashboard` should aggregate:
+
+```text
+kpis
+runs
+stores
+records
+upcoming_events
+predictions
+events
+```
+
+Rules:
+
+1. Do not let the frontend query Postgres/Supabase directly.
+2. Do not calculate normalized records or predictions in React.
+3. Keep responses typed with Pydantic.
+4. Keep list sizes bounded for dashboard performance.
+
+#### Step 9 - ShadCN Dashboard Display
+
+The UI should tell the full pipeline story in one screen.
+
+Recommended layout:
+
+```text
+Hero + IngestPanel
+Current RunStatus
+KpiCards
+Store / Run filters, with confidence filtering if the API supports it
+Normalized Records table
+Predicted Stock Needs table
+Upcoming Demand Events panel
+Workflow Events timeline
+```
+
+ShadCN-first component plan:
+
+```text
+KpiCards -> Card, Badge, Skeleton
+IngestPanel -> Card, Button, Input, Alert, Skeleton
+RunStatus -> Badge, Card
+StoreFilter -> Select
+RecordsTable -> Table, Badge, ScrollArea, Skeleton
+PredictionTable -> Table, Badge, ScrollArea, Skeleton
+UpcomingEventsPanel -> Card, Badge, ScrollArea
+EventsTimeline -> Card, Badge, ScrollArea
+```
+
+Display requirements:
+
+1. Every run status must be visible.
+2. Every workflow failure must be visible in the timeline.
+3. Every prediction must show a reason, not only a predicted quantity.
+4. Prediction rows should show event, baseline quantity, available stock, predicted quantity, recommended reorder quantity, confidence badge, and reason.
+5. Empty states should explain what action generates the missing data.
+6. Loading states should use ShadCN `Skeleton` and keep layout stable.
+
+#### Step 10 - Demo Narrative
+
+Use this as the judge-facing story:
+
+```text
+The user uploads messy retail data or runs a seeded source.
+FastAPI creates a queued ingest run.
+OpenWorkflow durably processes the run.
+Raw rows are saved first so the import is auditable.
+The normalizer converts messy customer data into Digithon's supported dataset.
+The predictor uses normalized records and seeded events like Super Bowl and Black Friday.
+The ShadCN dashboard shows current inventory signals, predicted stock needs, demand events, and every workflow event.
+If the worker crashes, the workflow resumes without duplicate raw, normalized, or prediction rows.
+```
 
 ### Supported MVP Sources
 
@@ -146,15 +562,15 @@ inventory_predictions:
 - id
 - run_id
 - store_id
+- calendar_event_id
 - product_name
-- forecast_date
 - baseline_quantity
+- available_stock
 - predicted_quantity
-- event_uplift
-- risk_level
-- related_event_id
-- explanation_notes JSONB
-- payload JSONB
+- uplift_multiplier
+- recommended_reorder_quantity
+- confidence
+- reasons JSONB
 - created_at
 
 events:
@@ -179,7 +595,7 @@ Keep relationships explicit so the database can support future product, supplier
 5. `normalized_data.store_id` joins to `stores.id`.
 6. `inventory_predictions.run_id` joins to `ingest_runs.id`.
 7. `inventory_predictions.store_id` joins to `stores.id`.
-8. `inventory_predictions.related_event_id` joins to `calendar_events.id` when a prediction is event-driven.
+8. `inventory_predictions.calendar_event_id` joins to `calendar_events.id` for the demand event driving the recommendation.
 9. `events.run_id` joins to `ingest_runs.id`.
 
 Prefer foreign keys where practical, but do not let perfect modeling block the MVP. The important rule is that raw rows, normalized rows, stores, runs, and events remain queryable together.
@@ -206,10 +622,10 @@ create index if not exists idx_calendar_events_impact_scope on calendar_events(i
 create index if not exists idx_calendar_events_product_tags_gin on calendar_events using gin(product_tags);
 create index if not exists idx_inventory_predictions_run_id on inventory_predictions(run_id);
 create index if not exists idx_inventory_predictions_store_id on inventory_predictions(store_id);
+create index if not exists idx_inventory_predictions_calendar_event_id on inventory_predictions(calendar_event_id);
 create index if not exists idx_inventory_predictions_product_name on inventory_predictions(product_name);
-create index if not exists idx_inventory_predictions_forecast_date on inventory_predictions(forecast_date);
-create index if not exists idx_inventory_predictions_risk_level on inventory_predictions(risk_level);
-create unique index if not exists idx_inventory_predictions_unique_forecast on inventory_predictions(run_id, store_id, product_name, forecast_date, coalesce(related_event_id, '00000000-0000-0000-0000-000000000000'::uuid));
+create index if not exists idx_inventory_predictions_reorder_quantity on inventory_predictions(recommended_reorder_quantity);
+create unique index if not exists idx_inventory_predictions_unique_event_product on inventory_predictions(run_id, store_id, product_name, calendar_event_id);
 create index if not exists idx_events_run_id on events(run_id);
 create index if not exists idx_events_workflow_id on events(workflow_id);
 create index if not exists idx_events_step_name on events(step_name);
@@ -225,8 +641,8 @@ Use JSONB fields to support analytics without losing raw source fidelity.
 3. `normalized_data.quality_notes` stores correction and warning labels.
 4. `calendar_events.product_tags` stores normalized product/category labels affected by an event.
 5. `calendar_events.payload` stores event source metadata, holiday observance details, event examples, and future API response fragments.
-6. `inventory_predictions.explanation_notes` stores human-readable reasons such as `baseline_from_recent_sales`, `super_bowl_snack_uplift`, or `holiday_storewide_uplift`.
-7. `inventory_predictions.payload` stores numeric model inputs such as lookback windows, matched events, uplift multipliers, and threshold comparisons.
+6. `inventory_predictions.reasons` stores human-readable reasons such as `baseline_from_recent_sales`, `super_bowl_snack_uplift`, or `recommended_reorder_exceeds_available_stock`.
+7. Numeric model inputs currently live in first-class columns such as `baseline_quantity`, `available_stock`, `predicted_quantity`, `uplift_multiplier`, and `recommended_reorder_quantity`; add a `payload` column later only if the predictor needs extra explainability metadata.
 8. `events.payload` stores workflow-level metadata, error details, row counts, and retry information.
 
 Fast dashboard analytics can combine relational columns and JSONB fields. Example analytics include total raw rows, normalized row count, quality issue count, reorder count, stockout count, predicted reorder count, predicted stockout count, upcoming high-impact events, rows by store, rows by source type, and events by workflow step.
@@ -239,7 +655,7 @@ Inventory prediction is step two after the basic ingest path is working. It shou
 
 `calendar_events` stores holidays and demand-driving events that can affect store inventory. It is intentionally database-backed so predictions are reproducible, explainable, and independent of live API availability during the demo.
 
-Recommended SQL shape:
+Current local SQL shape:
 
 ```sql
 create table if not exists calendar_events (
@@ -348,22 +764,23 @@ create table if not exists inventory_predictions (
   id uuid primary key default gen_random_uuid(),
   run_id uuid not null references ingest_runs(id),
   store_id uuid not null references stores(id),
+  calendar_event_id uuid not null references calendar_events(id),
   product_name text not null,
-  forecast_date date not null,
-  baseline_quantity integer not null check (baseline_quantity >= 0),
+  baseline_quantity numeric(12, 2) not null,
+  available_stock integer not null,
   predicted_quantity integer not null check (predicted_quantity >= 0),
-  event_uplift integer not null default 0 check (event_uplift >= 0),
-  risk_level text not null check (risk_level in ('ok', 'watch', 'reorder', 'stockout')),
-  related_event_id uuid references calendar_events(id),
-  explanation_notes jsonb not null default '[]'::jsonb,
-  payload jsonb not null default '{}'::jsonb,
-  created_at timestamptz not null default now()
+  uplift_multiplier numeric(8, 4) not null,
+  recommended_reorder_quantity integer not null,
+  confidence text not null check (confidence in ('low', 'medium', 'high')),
+  reasons jsonb not null default '[]'::jsonb,
+  created_at timestamptz not null default now(),
+  unique (run_id, store_id, product_name, calendar_event_id)
 );
 ```
 
 Idempotency rule:
 
-1. Add a unique index for `(run_id, store_id, product_name, forecast_date, related_event_id)` using a null-safe expression for `related_event_id`.
+1. Keep uniqueness on `(run_id, store_id, product_name, calendar_event_id)`.
 2. Worker inserts should use `on conflict do update` or `on conflict do nothing` so retry/resume cannot duplicate predictions.
 3. If the prediction algorithm changes during development, prefer `on conflict do update` for the MVP so the latest deterministic output is visible without manually deleting rows.
 
@@ -372,17 +789,19 @@ Prediction record examples:
 ```json
 {
   "store_name": "Downtown",
+  "event_name": "Black Friday",
+  "calendar_event_id": "uuid",
   "product_name": "coffee beans",
-  "forecast_date": "2026-11-27",
-  "baseline_quantity": 18,
+  "baseline_quantity": 18.0,
+  "available_stock": 12,
   "predicted_quantity": 28,
-  "event_uplift": 10,
-  "risk_level": "reorder",
-  "related_event": "Black Friday",
-  "explanation_notes": [
+  "uplift_multiplier": 0.4675,
+  "recommended_reorder_quantity": 16,
+  "confidence": "high",
+  "reasons": [
     "baseline_from_recent_sales",
     "black_friday_high_traffic_uplift",
-    "predicted_quantity_exceeds_reorder_threshold"
+    "predicted_quantity_exceeds_available_stock"
   ]
 }
 ```
@@ -436,7 +855,7 @@ GET /predictions
 
 Add Pydantic response models when the prediction tables are introduced.
 
-Recommended models:
+Current local models:
 
 ```text
 CalendarEvent:
@@ -459,21 +878,25 @@ InventoryPrediction:
 - run_id: str
 - store_id: str
 - store_name: str
+- calendar_event_id: str
+- event_name: str
 - product_name: str
-- forecast_date: date
-- baseline_quantity: int
+- baseline_quantity: float
+- available_stock: int
 - predicted_quantity: int
-- event_uplift: int
-- risk_level: Literal['ok', 'watch', 'reorder', 'stockout']
-- related_event_id: str | None
-- related_event_name: str | None
-- explanation_notes: list[str]
-- payload: dict[str, Any]
+- uplift_multiplier: float
+- recommended_reorder_quantity: int
+- confidence: Literal['low', 'medium', 'high']
+- reasons: list[str]
 - created_at: datetime
 
-PredictionKpis:
-- predicted_reorder_count: int
-- predicted_stockout_count: int
+DashboardKpis current prediction fields:
+- prediction_count: int
+- recommended_reorder_quantity_total: int
+
+Future PredictionKpis, if added separately:
+- prediction_count: int
+- recommended_reorder_quantity_total: int
 - upcoming_event_count: int
 - high_impact_event_count: int
 ```
@@ -482,11 +905,11 @@ Endpoint behavior:
 
 1. `GET /calendar-events` returns upcoming events ordered by `starts_on asc`, default limit 50.
 2. `GET /calendar-events?from_date=YYYY-MM-DD&to_date=YYYY-MM-DD` filters by date range.
-3. `GET /predictions` returns prediction rows ordered by `forecast_date asc`, then highest risk first.
+3. `GET /predictions` returns prediction rows ordered by `recommended_reorder_quantity desc`, then newest first.
 4. `GET /predictions?run_id=...` filters predictions for a specific ingest run.
 5. `GET /predictions?store_id=...` filters predictions for one store.
-6. `GET /predictions?risk_level=reorder` filters predictions for operational action.
-7. `GET /dashboard` should include `upcoming_events`, `predictions`, and `prediction_kpis` once those tables exist.
+6. `GET /predictions?confidence=high` is a future optional filter; the current local API does not implement it yet.
+7. `GET /dashboard` currently includes `upcoming_events` and `predictions`; add a separate `prediction_kpis` object later only if the frontend needs it.
 8. Keep list endpoints bounded with `limit` query parameters. Do not return unbounded prediction history.
 
 Dashboard response extension:
@@ -494,7 +917,6 @@ Dashboard response extension:
 ```text
 DashboardResponse:
 - kpis
-- prediction_kpis
 - runs
 - stores
 - records
@@ -706,7 +1128,7 @@ What stock is this store likely to need soon, and why?
 The demo story should be concrete:
 
 ```text
-Downtown needs more coffee beans on Black Friday because recent baseline demand is 18 units, Black Friday is a high-traffic shopping event, the event uplift is 10 units, and predicted demand crosses the reorder threshold.
+Downtown should reorder 16 units of coffee beans for Black Friday because recent baseline demand is 18 units, current available stock is 12 units, and Black Friday's event multiplier raises predicted demand to 28 units.
 ```
 
 ### Package Shape
@@ -768,27 +1190,20 @@ The predictor should return records compatible with `inventory_predictions`.
 {
   "run_id": "uuid",
   "store_id": "uuid",
+  "calendar_event_id": "uuid",
   "product_name": "coffee beans",
-  "forecast_date": "2026-11-27",
-  "baseline_quantity": 18,
+  "baseline_quantity": 18.0,
+  "available_stock": 12,
   "predicted_quantity": 28,
-  "event_uplift": 10,
-  "risk_level": "reorder",
-  "related_event_id": "uuid-or-null",
-  "explanation_notes": [
+  "uplift_multiplier": 0.4675,
+  "recommended_reorder_quantity": 16,
+  "confidence": "high",
+  "reasons": [
     "baseline_from_recent_sales",
     "event_matched_product_tag",
     "black_friday_high_traffic_uplift",
-    "predicted_quantity_exceeds_reorder_threshold"
-  ],
-  "payload": {
-    "lookback_days": 30,
-    "forecast_window_days": 14,
-    "baseline_method": "average_quantity_by_store_product",
-    "event_impact_score": 0.85,
-    "event_multiplier": 0.55,
-    "matched_product_tags": ["coffee beans"]
-  }
+    "predicted_quantity_exceeds_available_stock"
+  ]
 }
 ```
 
@@ -802,10 +1217,11 @@ Use this first algorithm. It is intentionally simple and explainable.
 4. Load upcoming `calendar_events` where `starts_on` is between today and `today + forecast_window_days`.
 5. Match events to products when either product name is in `product_tags` or product category is represented by a tag. For MVP, exact lower-case string matching is acceptable.
 6. Compute an event multiplier from `event_type` and `impact_score`.
-7. Compute `event_uplift = ceil(baseline_quantity * event_multiplier)`.
-8. Compute `predicted_quantity = baseline_quantity + event_uplift`.
-9. Compute `risk_level` by comparing predicted demand against reorder thresholds.
-10. Emit explanation notes for every non-obvious decision.
+7. Compute `predicted_quantity = ceil(baseline_quantity * (1 + event_multiplier))`.
+8. Estimate `available_stock` from current normalized inventory signals or a deterministic fallback when only demo sales rows are available.
+9. Compute `recommended_reorder_quantity = max(predicted_quantity - available_stock, 0)`.
+10. Compute `confidence` from event impact, matched product specificity, and available input quality.
+11. Emit `reasons` for every non-obvious decision.
 
 Recommended default config:
 
@@ -820,10 +1236,9 @@ Recommended default config:
     "seasonal": 0.30,
     "local_event": 0.25
   },
-  "risk_thresholds": {
-    "watch": 1.10,
-    "reorder": 1.35,
-    "stockout": 1.75
+  "confidence_thresholds": {
+    "high_impact_score": 0.70,
+    "medium_impact_score": 0.40
   }
 }
 ```
@@ -834,24 +1249,20 @@ Multiplier formula:
 event_multiplier = event_type_multipliers[event_type] * impact_score
 ```
 
-Risk-level rule:
+Recommended reorder rule:
 
 ```text
-ratio = predicted_quantity / max(baseline_quantity, 1)
+recommended_reorder_quantity = max(predicted_quantity - available_stock, 0)
 
-if baseline_quantity == 0 and predicted_quantity > 0:
-  risk_level = "stockout"
-else if ratio >= 1.75:
-  risk_level = "stockout"
-else if ratio >= 1.35:
-  risk_level = "reorder"
-else if ratio >= 1.10:
-  risk_level = "watch"
+if matched exact product tag and impact_score >= 0.70:
+  confidence = "high"
+else if matched category tag or impact_score >= 0.40:
+  confidence = "medium"
 else:
-  risk_level = "ok"
+  confidence = "low"
 ```
 
-This risk rule is demand-risk oriented. It is separate from `normalized_data.reorder_signal`, which reflects current row-level inventory condition.
+This reorder rule is event-recommendation oriented. It is separate from `normalized_data.reorder_signal`, which reflects current row-level inventory condition.
 
 ### Event Matching Rules
 
@@ -873,7 +1284,7 @@ soda -> soda, beverages, snacks
 frozen pizza -> frozen pizza, snacks
 ```
 
-If no product tag matches an event, the predictor may still create a low uplift storewide prediction for high-impact national events, but mark it clearly with `storewide_event_uplift`.
+If no product tag matches an event, the predictor may still create a low-confidence storewide prediction for high-impact national events, but mark it clearly in `reasons`.
 
 ### Prediction Workflow Step
 
@@ -886,7 +1297,7 @@ Step behavior:
 3. Query upcoming calendar events for the forecast window.
 4. Run deterministic prediction logic.
 5. Insert or update `inventory_predictions` idempotently.
-6. Append `predictions_stored` event with prediction count, risky prediction count, and matched event count.
+6. Append `predictions_stored` event with prediction count, recommended reorder total, and matched event count.
 7. Append `prediction_completed` event.
 8. If prediction fails, append a failed event and decide based on demo timing whether to fail the run or mark prediction as skipped.
 
@@ -984,6 +1395,77 @@ alert
 separator
 tabs
 input
+```
+
+### ShadCN UI Kit Recommendation For B2B MVP
+
+Use ShadCN UI Kit as an acceleration source for high-value B2B dashboard patterns, not as a full generic template import. The product should feel like an enterprise retail operations command center, so only adopt components that directly support ingestion visibility, inventory decision-making, prediction explainability, and workflow observability.
+
+Recommended ShadCN UI Kit sources:
+
+1. Website Analytics dashboard patterns
+Use for the main command-center layout, KPI density, executive summary panels, chart placement, and dashboard grid rhythm.
+
+2. E-commerce dashboard patterns
+Use for retail inventory vocabulary, product/store tables, stock-risk presentation, and operational product data density.
+
+3. Dashboard UI Stat Cards
+Use for KPI cards such as raw rows, normalized rows, quality issues, current reorders, predicted reorders, stockout risk, upcoming events, and high-impact events.
+
+4. Dashboard UI Tables
+Use for normalized records and predicted stock needs. Tables should support dense B2B scanning, sticky or persistent headers, compact rows, semantic badges, horizontal scroll on mobile, and clear empty/loading states.
+
+5. Dashboard UI Form Layouts
+Use for `IngestPanel`: CSV/XLSX upload, Google Drive reference input, seeded demo action, pending state, and upload/API error alerts.
+
+6. Dashboard UI Charts
+Use only for high-signal operational analytics, such as rows by store, risk breakdown, quality issue distribution, and prediction risk mix. Do not add decorative charts that do not support the demo narrative.
+
+7. Event Calendar / event-card patterns
+Use only as inspiration for `Upcoming Demand Events`. Keep it as a compact panel with event name, date range, impact score, event type badge, and affected product tags. Do not add a full calendar page.
+
+8. Page Layout blocks
+Use only for one-screen layout composition. Do not add a sidebar, multipage navigation, auth shell, settings screens, or generic admin routes.
+
+High-value B2B component priority:
+
+```text
+1. Command-center dashboard shell
+2. KPI/stat card band
+3. Ingest source form/dropzone
+4. Current run status card
+5. Store/run/confidence filter row if supported by the API
+6. Normalized records data table
+7. Predicted stock needs data table
+8. Upcoming demand events panel
+9. Workflow events timeline
+10. Small analytics/risk chart only if backed by API data
+```
+
+Do not use these ShadCN UI Kit areas for the MVP:
+
+```text
+- Authentication pages
+- Pricing/marketing pages
+- Generic CRM pipeline screens
+- Project management/Kanban screens
+- Chat or AI app templates
+- Sidebar-heavy app shells
+- Ecommerce checkout/cart/product detail pages
+- Full calendar pages
+- Decorative animated illustrations
+```
+
+Implementation rule:
+
+```text
+Use Website Analytics as the visual/layout base, E-commerce as the retail data reference, and targeted dashboard blocks for stat cards, tables, forms, charts, and event panels. Keep all copied/adapted components composed from ShadCN primitives and wired to FastAPI data through React Query.
+```
+
+Licensing rule:
+
+```text
+Only copy code from ShadCN UI Kit assets that the team is licensed to use. If license/access is unclear, use the visible demos as visual references and implement equivalent components with official ShadCN primitives.
 ```
 
 ### Required UI
@@ -1528,32 +2010,31 @@ Add prediction UI only after the core ingest dashboard works. Keep it on the sam
 Recommended panels:
 
 1. `Upcoming Demand Events` card list showing event name, date range, event type, impact score, and affected product tags.
-2. `Predicted Stock Needs` table showing store, product, forecast date, baseline quantity, predicted quantity, event uplift, risk badge, and explanation.
-3. `Prediction KPIs` cards for predicted reorder count, predicted stockout count, upcoming event count, and high-impact event count.
+2. `Predicted Stock Needs` table showing event, store, product, baseline quantity, available stock, predicted quantity, recommended reorder quantity, confidence badge, and reason.
+3. `Prediction KPIs` cards for prediction count, recommended reorder quantity total, upcoming event count, and high-impact event count.
 4. Optional store filter should apply to normalized records and predictions together.
-5. Optional risk filter can show only `watch`, `reorder`, or `stockout` predictions.
+5. Optional confidence filter can show only `low`, `medium`, or `high` confidence predictions if added to the API.
 
 Prediction table columns:
 
 ```text
 Store
 Product
-Forecast Date
+Event
 Baseline
+Available Stock
 Predicted Need
-Event Uplift
-Risk
-Related Event
+Recommended Reorder
+Confidence
 Reason
 ```
 
-Risk badge colors:
+Confidence badge colors:
 
 ```text
-ok: neutral
-watch: secondary/warning
-reorder: warning/attention
-stockout: destructive
+high: primary/default
+medium: secondary
+low: outline/muted
 ```
 
 UX requirements:

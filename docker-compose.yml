@@ -5,11 +5,86 @@ services:
     environment:
       POSTGRES_DB: digithon
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "55432:5432"
     volumes:
       - digithon-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d digithon"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  migrate:
+    image: postgres:16-alpine
+    container_name: digithon-migrate
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./db/migrations:/migrations:ro
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+    command: >
+      sh -c 'for f in /migrations/*.sql; do psql -v ON_ERROR_STOP=1 -h postgres -U postgres -d digithon -f "$${f}"; done'
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: digithon-api
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    ports:
+      - "8000:8000"
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: digithon-web
+    depends_on:
+      - api
+    environment:
+      VITE_API_BASE_URL: http://localhost:8000
+    ports:
+      - "5173:5173"
+
+  openworkflow:
+    build:
+      context: .
+      dockerfile: Dockerfile.openworkflow
+    container_name: digithon-openworkflow
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      OPENWORKFLOW_POSTGRES_URL: ${DATABASE_URL}
+      OPENWORKFLOW_NAMESPACE_ID: digithon-local
+      OPENWORKFLOW_SCHEMA: openworkflow
+      NORMALIZER_MODE: script
+    ports:
+      - "3001:3000"
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    container_name: digithon-worker
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      OPENWORKFLOW_POSTGRES_URL: ${DATABASE_URL}
+      OPENWORKFLOW_NAMESPACE_ID: digithon-local
+      OPENWORKFLOW_SCHEMA: openworkflow
+      NORMALIZER_MODE: script
 
 volumes:
   digithon-postgres-data:

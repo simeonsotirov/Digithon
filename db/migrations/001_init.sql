@@ -11,6 +11,7 @@ create table if not exists ingest_runs (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references users(id),
   source_filename text not null,
+  workflow_id text,
   status text not null check (status in ('queued', 'running', 'completed', 'failed')),
   started_at timestamptz,
   completed_at timestamptz,
@@ -64,7 +65,10 @@ create table if not exists events (
   created_at timestamptz not null default now()
 );
 
+alter table ingest_runs add column if not exists workflow_id text;
+
 create index if not exists idx_ingest_runs_status on ingest_runs(status);
+create index if not exists idx_ingest_runs_workflow_id on ingest_runs(workflow_id);
 create index if not exists idx_events_run_id on events(run_id);
 create index if not exists idx_events_workflow_id on events(workflow_id);
 create index if not exists idx_events_step_name on events(step_name);
