@@ -96,13 +96,57 @@ export type Dashboard = {
   events: Event[];
 };
 
+export type CalendarEvent = {
+  id: string;
+  event_name: string;
+  event_type: "holiday" | "sports" | "shopping" | "seasonal" | "local_event";
+  starts_on: string;
+  ends_on: string;
+  country: string;
+  region: string | null;
+  city: string | null;
+  impact_scope: "national" | "regional" | "local";
+  impact_score: number;
+  product_tags: string[];
+  payload: Record<string, unknown>;
+  created_at: string;
+};
+
+export type InventoryPrediction = {
+  id: string;
+  run_id: string;
+  store_id: string;
+  store_name: string;
+  product_name: string;
+  forecast_date: string;
+  baseline_quantity: number;
+  predicted_quantity: number;
+  event_uplift: number;
+  risk_level: "ok" | "watch" | "reorder" | "stockout";
+  related_event_id: string | null;
+  related_event_name: string | null;
+  explanation_notes: string[];
+  payload: Record<string, unknown>;
+  created_at: string;
+};
+
+export type PredictionKpis = {
+  predicted_reorder_count: number;
+  predicted_stockout_count: number;
+  upcoming_event_count: number;
+  high_impact_event_count: number;
+};
+
+export type IngestSource =
+  | { type: "seed" }
+  | { type: "file"; file: File }
+  | { type: "drive"; driveId: string };
+
 const apiBase = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
 
 export async function getDashboard() {
   const response = await fetch(`${apiBase}/dashboard`);
-  if (!response.ok) {
-    throw new Error("Failed to load dashboard");
-  }
+  if (!response.ok) throw new Error("Failed to load dashboard");
   return response.json() as Promise<Dashboard>;
 }
 
@@ -134,7 +178,7 @@ export async function createIngest(): Promise<Run> {
   const response = await fetch(`${apiBase}/ingest`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ source_filename: "db/seed/messy_sales.csv" }),
+    body: JSON.stringify(body),
   });
   if (!response.ok) throw new Error("Failed to create ingest run");
   return response.json();

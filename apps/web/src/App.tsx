@@ -11,13 +11,19 @@ import { PredictionsTable } from "./components/PredictionsTable";
 import { RecordsTable } from "./components/RecordsTable";
 import { RunStatus } from "./components/RunStatus";
 import { StoreFilter } from "./components/StoreFilter";
-import { useDashboard, useEvents } from "./queries";
+import { UpcomingEventsPanel } from "./components/UpcomingEventsPanel";
+import { useCalendarEvents, useDashboard, useEvents, usePredictions } from "./queries";
 import { useUiStore } from "./store";
 
 function Dashboard() {
-  const { selectedStore, selectedRun, setSelectedStore, setSelectedRun } = useUiStore();
+  const { selectedStore, selectedRun, selectedRisk, setSelectedStore, setSelectedRun, setSelectedRisk } = useUiStore();
   const dashboard = useDashboard();
   const eventsQuery = useEvents(selectedRun === "all" ? null : selectedRun);
+  const calendarEvents = useCalendarEvents();
+  const predictions = usePredictions({
+    store_id: selectedStore !== "all" ? selectedStore : undefined,
+    risk_level: selectedRisk !== "all" ? selectedRisk : undefined,
+  });
 
   const data = dashboard.data;
   const loading = dashboard.isLoading;
@@ -37,26 +43,28 @@ function Dashboard() {
 
   const events =
     selectedRun !== "all" ? (eventsQuery.data ?? []) : (data?.events ?? []);
-
   const eventsLoading = selectedRun !== "all" ? eventsQuery.isLoading : loading;
 
   return (
-    <div className="min-h-screen bg-[#EFF6FF]">
-      <main className="max-w-6xl mx-auto px-5 py-8 space-y-6">
-        <section className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 bg-[#1E40AF] text-white rounded-3xl p-8 shadow-2xl shadow-[#1E40AF]/25">
+    <div className="min-h-screen bg-slate-950">
+      <main className="max-w-7xl mx-auto px-4 sm:px-5 py-6 sm:py-8 space-y-5 sm:space-y-6">
+
+        {/* Hero / status strip */}
+        <section className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 rounded-2xl border border-cyan-400/15 bg-gradient-to-br from-slate-900 via-slate-900 to-cyan-950/30 shadow-lg shadow-cyan-950/20 p-6 sm:p-8">
           <div>
-            <p className="text-[#F7B160] text-xs font-black uppercase tracking-widest mb-2">
-              Messy CSV to durable inventory truth
+            <p className="text-cyan-400 text-xs font-black uppercase tracking-[0.18em] mb-2">
+              Retail Inventory Intelligence
             </p>
-            <h1 className="text-4xl sm:text-5xl font-black leading-tight mb-3">
-              Digithon Inventory Normalizer
+            <h1 className="text-2xl sm:text-4xl font-semibold tracking-tight text-slate-50 mb-2">
+              SignalOps Inventory
             </h1>
-            <p className="text-white/70 max-w-lg">
-              Trigger an ingest run, let the worker normalize chaotic retail exports, and watch the
-              persisted workflow events explain every step.
+            <p className="text-slate-400 text-sm max-w-lg">
+              Upload messy retail exports, normalize them, and surface event-aware stock predictions.
             </p>
           </div>
-          <IngestPanel />
+          <div className="w-full sm:w-auto">
+            <IngestPanel />
+          </div>
         </section>
 
         {dashboard.isError && (
@@ -70,16 +78,28 @@ function Dashboard() {
         )}
 
         <RunStatus run={latestRun} />
+
+        {/* Ingest KPI band */}
         <KpiCards kpis={data?.kpis} loading={loading} />
-        <Separator />
+
+        {/* Prediction KPI band */}
+        <PredictionKpiCards
+          predictions={predictions.data ?? []}
+          calendarEvents={calendarEvents.data ?? []}
+          loading={predictions.isLoading || calendarEvents.isLoading}
+        />
+
+        <Separator className="border-slate-800" />
 
         <StoreFilter
           stores={data?.stores ?? []}
           runs={data?.runs ?? []}
           selectedStore={selectedStore}
           selectedRun={selectedRun}
+          selectedRisk={selectedRisk}
           onStoreChange={setSelectedStore}
           onRunChange={setSelectedRun}
+          onRiskChange={setSelectedRisk}
         />
 
         <Card>
