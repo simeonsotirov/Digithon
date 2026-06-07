@@ -58,6 +58,13 @@ h1 {
   padding: 16px 22px;
 }
 
+.ingest-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
 .hero button:disabled {
   opacity: 0.65;
 }
