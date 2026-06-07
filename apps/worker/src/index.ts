@@ -1,8 +1,9 @@
-import { pool } from "./db.js";
+import { pool, query } from "./db.js";
 import { processNextRun } from "./workflows/ingest.js";
 
 async function main() {
-  console.log("Digithon worker started");
+  await query("select 1 as ok");
+  console.log("worker: db connected");
   while (true) {
     const processed = await processNextRun();
     if (!processed) {
