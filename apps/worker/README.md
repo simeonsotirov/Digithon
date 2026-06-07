@@ -5,8 +5,14 @@ TypeScript ingest worker. Claims queued runs, calls the Python normalizer, persi
 ## Requirements
 
 - Node 18+
-- Python 3.10+
+- Poetry (the worker invokes the normalizer via `poetry run normalizer`)
 - Postgres (via `docker compose up -d` from repo root)
+
+Install Python deps once from the repo root so the normalizer is available:
+
+```bash
+poetry install
+```
 
 ## Environment variables
 
