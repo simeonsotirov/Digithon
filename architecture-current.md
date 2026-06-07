@@ -361,8 +361,9 @@ Start with these files when building the MVP:
 1. `HACKATHON_EXECUTION_PLAN.md`
 2. `architecture-current.md`
 3. `MVP_WORK_SPLIT.md`
-4. `db/migrations/`
-5. `packages/normalizer/`
-6. `apps/api/`
-7. `apps/worker/`
-8. `apps/web/`
+4. `IMPLEMENTATION_TASKS.md`
+5. `db/migrations/`
+6. `packages/normalizer/`
+7. `apps/api/`
+8. `apps/worker/`
+9. `apps/web/`

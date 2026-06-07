@@ -2,6 +2,8 @@
 
 This split is optimized for speed. Each developer owns one lane, but the interfaces are fixed early so everyone can work in parallel.
 
+For step-by-step implementation tasks, use `IMPLEMENTATION_TASKS.md`. It includes detailed file-level tasks, acceptance criteria, smoke tests, and official documentation links.
+
 ## Shared MVP Goal
 
 Build the end-to-end demo path:
