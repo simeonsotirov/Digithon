@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,7 +9,7 @@ import { IngestPanel } from "./components/IngestPanel";
 import { KpiCards } from "./components/KpiCards";
 import { LandingPage } from "./components/LandingPage";
 import { PredictionKpiCards } from "./components/PredictionKpiCards";
-import { PredictionsTable } from "./components/PredictionsTable";
+import { PredictionTable } from "./components/PredictionTable";
 import { RecordsTable } from "./components/RecordsTable";
 import { RunStatus } from "./components/RunStatus";
 import { StoreFilter } from "./components/StoreFilter";
@@ -22,7 +22,7 @@ function Dashboard() {
   const dashboard = useDashboard();
   const eventsQuery = useEvents(selectedRun === "all" ? null : selectedRun);
   const calendarEvents = useCalendarEvents();
-  const predictionsQuery = usePredictions({
+  const predictions = usePredictions({
     store_id: selectedStore !== "all" ? selectedStore : undefined,
     risk_level: selectedRisk !== "all" ? selectedRisk : undefined,
   });
@@ -37,37 +37,33 @@ function Dashboard() {
     return storeMatches && runMatches;
   });
 
-  const predictions = (data?.predictions ?? []).filter((prediction) => {
-    const storeMatches = selectedStore === "all" || prediction.store_id === selectedStore;
-    const runMatches = selectedRun === "all" || prediction.run_id === selectedRun;
-    return storeMatches && runMatches;
-  });
-
   const events =
     selectedRun !== "all" ? (eventsQuery.data ?? []) : (data?.events ?? []);
   const eventsLoading = selectedRun !== "all" ? eventsQuery.isLoading : loading;
 
   return (
-    <div className="min-h-screen bg-slate-950">
-      <main className="max-w-7xl mx-auto px-4 sm:px-5 py-6 sm:py-8 space-y-5 sm:space-y-6">
+    <div className="min-h-screen bg-background">
 
-        {/* Hero / status strip */}
-        <section className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 rounded-2xl border border-cyan-400/15 bg-gradient-to-br from-slate-900 via-slate-900 to-cyan-950/30 shadow-lg shadow-cyan-950/20 p-6 sm:p-8">
-          <div>
-            <p className="text-cyan-400 text-xs font-black uppercase tracking-[0.18em] mb-2">
-              Retail Inventory Intelligence
-            </p>
-            <h1 className="text-2xl sm:text-4xl font-semibold tracking-tight text-slate-50 mb-2">
-              SignalOps Inventory
-            </h1>
-            <p className="text-slate-400 text-sm max-w-lg">
-              Upload messy retail exports, normalize them, and surface event-aware stock predictions.
-            </p>
+      {/* Top header bar */}
+      <header className="sticky top-0 z-10 border-b bg-card shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-foreground flex items-center justify-center shrink-0">
+              <span className="text-primary font-black text-sm">Q</span>
+            </div>
+            <div>
+              <h1 className="text-base font-bold text-foreground leading-none">SignalOps Inventory</h1>
+              <p className="text-xs text-muted-foreground mt-0.5">Retail Inventory Intelligence Â· Quant @ Digithon 2026</p>
+            </div>
           </div>
-          <div className="w-full sm:w-auto">
+          <div className="flex items-center gap-3">
+            <RunStatus run={latestRun} />
             <IngestPanel />
           </div>
-        </section>
+        </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
 
         {dashboard.isError && (
           <Alert variant="destructive">
@@ -79,19 +75,17 @@ function Dashboard() {
           </Alert>
         )}
 
-        <RunStatus run={latestRun} />
-
-        {/* Ingest KPI band */}
+        {/* KPI stat cards â€” shadcnuikit Stat Card 1 pattern */}
         <KpiCards kpis={data?.kpis} loading={loading} />
 
         {/* Prediction KPI band */}
         <PredictionKpiCards
-          predictions={predictionsQuery.data ?? []}
+          predictions={predictions.data ?? []}
           calendarEvents={calendarEvents.data ?? []}
-          loading={predictionsQuery.isLoading || calendarEvents.isLoading}
+          loading={predictions.isLoading || calendarEvents.isLoading}
         />
 
-        <Separator className="border-slate-800" />
+        <Separator />
 
         <StoreFilter
           stores={data?.stores ?? []}
@@ -104,31 +98,72 @@ function Dashboard() {
           onRiskChange={setSelectedRisk}
         />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Event-Aware Inventory Predictions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <PredictionsTable predictions={predictions} loading={loading} />
-          </CardContent>
-        </Card>
-
+        {/* Main grid â€” wide left, narrow right */}
         <div className="grid grid-cols-1 lg:grid-cols-[1.7fr_0.8fr] gap-6">
-          <Card>
-            <CardHeader><CardTitle>Normalized Records</CardTitle></CardHeader>
-            <CardContent><RecordsTable records={records} loading={loading} /></CardContent>
-          </Card>
-          <Card>
-            <CardHeader><CardTitle>Workflow Events</CardTitle></CardHeader>
-            <CardContent><EventsTimeline events={events} loading={eventsLoading} /></CardContent>
-          </Card>
+
+          {/* Left column */}
+          <div className="space-y-6 min-w-0">
+            <Card className="rounded-xl border shadow-sm">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-semibold text-foreground uppercase tracking-[0.12em]">
+                  Normalized Records
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <RecordsTable records={records} loading={loading} />
+              </CardContent>
+            </Card>
+
+            <Card className="rounded-xl border shadow-sm">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-semibold text-foreground uppercase tracking-[0.12em]">
+                  Predicted Stock Needs
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <PredictionTable
+                  predictions={predictions.data ?? []}
+                  loading={predictions.isLoading}
+                />
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Right column */}
+          <div className="space-y-6">
+            <Card className="rounded-xl border shadow-sm">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-semibold text-foreground uppercase tracking-[0.12em]">
+                  Workflow Events
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <EventsTimeline events={events} loading={eventsLoading} />
+              </CardContent>
+            </Card>
+
+            <Card className="rounded-xl border shadow-sm">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-semibold text-foreground uppercase tracking-[0.12em]">
+                  Upcoming Demand Events
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <UpcomingEventsPanel
+                  events={calendarEvents.data ?? []}
+                  loading={calendarEvents.isLoading}
+                />
+              </CardContent>
+            </Card>
+          </div>
+
         </div>
 
         {/* Analytics row */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6">
-          <Card className="rounded-2xl border-slate-800 bg-slate-900/80">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <Card className="rounded-xl border shadow-sm">
             <CardHeader className="pb-3">
-              <CardTitle className="text-slate-50 text-sm font-semibold uppercase tracking-[0.15em]">
+              <CardTitle className="text-sm font-semibold text-foreground uppercase tracking-[0.12em]">
                 Rows by Store
               </CardTitle>
             </CardHeader>
@@ -141,9 +176,9 @@ function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-2xl border-slate-800 bg-slate-900/80">
+          <Card className="rounded-xl border shadow-sm">
             <CardHeader className="pb-3">
-              <CardTitle className="text-slate-50 text-sm font-semibold uppercase tracking-[0.15em]">
+              <CardTitle className="text-sm font-semibold text-foreground uppercase tracking-[0.12em]">
                 Recent Runs
               </CardTitle>
             </CardHeader>
@@ -152,9 +187,9 @@ function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-2xl border-slate-800 bg-slate-900/80">
+          <Card className="rounded-xl border shadow-sm">
             <CardHeader className="pb-3">
-              <CardTitle className="text-slate-50 text-sm font-semibold uppercase tracking-[0.15em]">
+              <CardTitle className="text-sm font-semibold text-foreground uppercase tracking-[0.12em]">
                 Events by Step
               </CardTitle>
             </CardHeader>

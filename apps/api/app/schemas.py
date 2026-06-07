@@ -116,3 +116,42 @@ class DashboardResponse(BaseModel):
     upcoming_events: list[CalendarEvent]
     predictions: list[InventoryPrediction]
     events: list[Event]
+
+
+RiskLevel = Literal["ok", "watch", "reorder", "stockout"]
+EventType = Literal["holiday", "sports", "shopping", "seasonal", "local_event"]
+ImpactScope = Literal["national", "regional", "local"]
+
+
+class CalendarEvent(BaseModel):
+    id: UUID
+    event_name: str
+    event_type: EventType
+    starts_on: date
+    ends_on: date
+    country: str
+    region: str | None = None
+    city: str | None = None
+    impact_scope: ImpactScope
+    impact_score: float
+    product_tags: list[str]
+    payload: dict[str, Any]
+    created_at: datetime
+
+
+class InventoryPrediction(BaseModel):
+    id: UUID
+    run_id: UUID
+    store_id: UUID
+    store_name: str
+    product_name: str
+    forecast_date: date
+    baseline_quantity: int
+    predicted_quantity: int
+    event_uplift: float
+    risk_level: RiskLevel
+    related_event_id: UUID | None = None
+    related_event_name: str | None = None
+    explanation_notes: list[str]
+    payload: dict[str, Any]
+    created_at: datetime

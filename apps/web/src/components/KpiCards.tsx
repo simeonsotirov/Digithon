@@ -1,3 +1,5 @@
+﻿import { Package, CheckCircle2, AlertTriangle, RefreshCw, XCircle } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 type Kpis = {
@@ -6,34 +8,75 @@ type Kpis = {
   quality_issue_count: number;
   reorder_count: number;
   stockout_count: number;
-  prediction_count: number;
-  recommended_reorder_quantity_total: number;
 };
 
 type Props = { kpis: Kpis | undefined; loading?: boolean };
 
 const CARDS = [
-  { label: "Raw rows", key: "total_raw_rows" as const },
-  { label: "Normalized", key: "total_normalized_rows" as const },
-  { label: "Quality fixes", key: "quality_issue_count" as const },
-  { label: "Reorders", key: "reorder_count" as const },
-  { label: "Stockouts", key: "stockout_count" as const },
-  { label: "Predictions", key: "prediction_count" as const },
-  { label: "Reco units", key: "recommended_reorder_quantity_total" as const },
-];
+  {
+    key: "total_raw_rows" as const,
+    label: "Rows Ingested",
+    description: "Total parsed source rows",
+    icon: Package,
+    iconClass: "text-primary",
+    iconBg: "bg-primary/10",
+  },
+  {
+    key: "total_normalized_rows" as const,
+    label: "Rows Normalized",
+    description: "Canonical records stored",
+    icon: CheckCircle2,
+    iconClass: "text-emerald-600",
+    iconBg: "bg-emerald-50",
+  },
+  {
+    key: "quality_issue_count" as const,
+    label: "Quality Issues",
+    description: "Corrections & warnings",
+    icon: AlertTriangle,
+    iconClass: "text-amber-600",
+    iconBg: "bg-amber-50",
+  },
+  {
+    key: "reorder_count" as const,
+    label: "Reorder Signals",
+    description: "Products below threshold",
+    icon: RefreshCw,
+    iconClass: "text-orange-600",
+    iconBg: "bg-orange-50",
+  },
+  {
+    key: "stockout_count" as const,
+    label: "Stockout Risk",
+    description: "Critical stock warnings",
+    icon: XCircle,
+    iconClass: "text-red-600",
+    iconBg: "bg-red-50",
+  },
+] as const;
 
 export function KpiCards({ kpis, loading }: Props) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4 my-6">
-      {CARDS.map(({ label, key }) => (
-        <Card key={key}>
-          <CardContent className="pt-4">
-            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">{label}</p>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      {CARDS.map(({ key, label, description, icon: Icon, iconClass, iconBg }) => (
+        <Card key={key} className="rounded-xl border shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 pt-4 px-5">
+            <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-[0.12em]">
+              {label}
+            </CardTitle>
+            <div className={`w-8 h-8 rounded-lg ${iconBg} flex items-center justify-center`}>
+              <Icon className={`h-4 w-4 ${iconClass}`} />
+            </div>
+          </CardHeader>
+          <CardContent className="px-5 pb-4">
             {loading ? (
-              <Skeleton className="h-8 w-16 mt-2" />
+              <Skeleton className="h-8 w-16 mb-1" />
             ) : (
-              <p className="text-3xl font-bold mt-1">{kpis?.[key] ?? 0}</p>
+              <p className="text-3xl font-bold tabular-nums text-foreground">
+                {(kpis?.[key] ?? 0).toLocaleString()}
+              </p>
             )}
+            <p className="text-xs text-muted-foreground mt-1">{description}</p>
           </CardContent>
         </Card>
       ))}
