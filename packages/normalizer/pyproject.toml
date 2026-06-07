@@ -1,0 +1,13 @@
+[tool.poetry]
+name = "digithon-normalizer"
+version = "0.1.0"
+description = "Messy retail CSV normalization engine"
+authors = ["Digithon Team"]
+packages = [{ include = "normalizer" }]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

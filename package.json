@@ -1,0 +1,12 @@
+{
+  "name": "digithon",
+  "private": true,
+  "workspaces": [
+    "apps/worker",
+    "apps/web"
+  ],
+  "scripts": {
+    "worker": "npm --workspace apps/worker run worker",
+    "web": "npm --workspace apps/web run dev"
+  }
+}

@@ -1,0 +1,7 @@
+store,product,quantity,price,sale_date
+Downtown Store,Coffee-Beans,18,$12.99,2026-06-01
+DT,coffee bean,4,"13,49",06/02/2026
+North Side,oatmilk,0,$4.20,2026/06/03
+south shop,Tea,7,USD 6.50,Jun 04 2026
+DTWN,espresso pod,5,$9.99,04/06/2026
+North,coffee beans,-2,bad-price,not-a-date

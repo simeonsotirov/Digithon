@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "digithon"
+version = "0.1.0"
+description = "Demand-driven inventory normalizer monorepo"
+authors = ["Digithon Team"]
+readme = "README.md"
+packages = [{ include = "digithon" }]
+
+
+[tool.poetry.dependencies]
+python = "^3.12"
+digithon-api = { path = "apps/api", develop = true }
+digithon-normalizer = { path = "packages/normalizer", develop = true }
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.11.2"
+pytest = "^8.3.5"
+
+[tool.poetry.scripts]
+api = "app.main:run"
+normalizer = "normalizer.normalize:main"
+make-messy-data = "normalizer.make_messy_data:main"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

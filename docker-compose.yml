@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: digithon-postgres
+    environment:
+      POSTGRES_DB: digithon
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "55432:5432"
+    volumes:
+      - digithon-postgres-data:/var/lib/postgresql/data
+
+volumes:
+  digithon-postgres-data:

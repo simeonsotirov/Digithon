@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "digithon-api"
+version = "0.1.0"
+description = "FastAPI boundary for Digithon"
+authors = ["Digithon Team"]
+packages = [{ include = "app" }]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = { extras = ["standard"], version = "^0.115.11" }
+psycopg = { extras = ["binary", "pool"], version = "^3.2.6" }
+pydantic = "^2.10.6"
+uvicorn = { extras = ["standard"], version = "^0.34.0" }
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
