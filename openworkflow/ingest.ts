@@ -49,12 +49,19 @@ export const ingestWorkflow = defineWorkflow(
       );
       await step.run({ name: "demo_delay_after_persist" }, demoDelay);
 
-      await step.run({ name: "generate_predictions" }, () => generatePredictions(ingestRun, workflowId));
+      const predictionSummary = await step.run({ name: "generate_predictions" }, () =>
+        generatePredictions(ingestRun, workflowId),
+      );
       await step.run({ name: "demo_delay_after_predictions" }, demoDelay);
 
       await step.run({ name: "mark_run_complete" }, () => markRunComplete(input.runId, workflowId));
 
-      return { runId: input.runId, workflowId, normalizedCount: records.length };
+      return {
+        runId: input.runId,
+        workflowId,
+        normalizedCount: records.length,
+        predictions: predictionSummary,
+      };
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       await step.run({ name: "mark_run_failed" }, () => markRunFailed(input.runId, workflowId, message));

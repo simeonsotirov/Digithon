@@ -183,7 +183,16 @@ function confidence(rowCount: number, directMatch: boolean) {
   return "low";
 }
 
-export async function generatePredictions(run: IngestRun, workflowId: string) {
+export type PredictionSummary = {
+  predictionsInserted: number;
+  productStoreGroups: number;
+  upcomingEventsConsidered: number;
+};
+
+export async function generatePredictions(
+  run: IngestRun,
+  workflowId: string,
+): Promise<PredictionSummary> {
   await writeEvent(run.id, workflowId, "generate_predictions", "prediction_started", "started");
 
   const source = await query<PredictionSourceRow>(
@@ -267,9 +276,17 @@ export async function generatePredictions(run: IngestRun, workflowId: string) {
     }
   }
 
+  const summary: PredictionSummary = {
+    predictionsInserted: inserted,
+    productStoreGroups: groups.size,
+    upcomingEventsConsidered: events.rows.length,
+  };
+
   await writeEvent(run.id, workflowId, "generate_predictions", "prediction_completed", "succeeded", {
     count: inserted,
   });
+
+  return summary;
 }
 
 export async function markRunComplete(runId: string, workflowId: string) {

@@ -97,6 +97,15 @@ def list_predictions(
     store_id: str | None = Query(default=None),
     limit: int = Query(default=50, ge=1, le=100),
 ) -> list[dict]:
+    # Default to the latest completed run so the table shows one diverse set of
+    # predictions instead of the same store/product duplicated across every
+    # historical run (each run re-ingests the same source).
+    if run_id is None:
+        latest = db.row(
+            "select run_id from inventory_predictions order by created_at desc limit 1"
+        )
+        run_id = str(latest["run_id"]) if latest else None
+
     return db.rows(
         """
         select p.*, s.display_name as store_name, c.event_name
@@ -153,6 +162,9 @@ def dashboard() -> dict:
         from inventory_predictions p
         join stores s on s.id = p.store_id
         join calendar_events c on c.id = p.calendar_event_id
+        where p.run_id = (
+          select run_id from inventory_predictions order by created_at desc limit 1
+        )
         order by p.recommended_reorder_quantity desc, p.created_at desc
         limit 50
         """
