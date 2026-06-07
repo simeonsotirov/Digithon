@@ -1,18 +1,25 @@
+import { useState } from "react";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { EventsTimeline } from "./components/EventsTimeline";
 import { IngestPanel } from "./components/IngestPanel";
 import { KpiCards } from "./components/KpiCards";
+import { LandingPage } from "./components/LandingPage";
 import { RecordsTable } from "./components/RecordsTable";
 import { RunStatus } from "./components/RunStatus";
 import { StoreFilter } from "./components/StoreFilter";
 import { useDashboard, useEvents } from "./queries";
 import { useUiStore } from "./store";
 
-function App() {
+function Dashboard() {
   const { selectedStore, selectedRun, setSelectedStore, setSelectedRun } = useUiStore();
   const dashboard = useDashboard();
   const eventsQuery = useEvents(selectedRun === "all" ? null : selectedRun);
 
   const data = dashboard.data;
+  const loading = dashboard.isLoading;
   const latestRun = data?.runs[0];
 
   const records = (data?.records ?? []).filter((record) => {
@@ -21,57 +28,76 @@ function App() {
     return storeMatches && runMatches;
   });
 
-  // When a specific run is selected use the dedicated events query; otherwise use dashboard events
   const events =
-    selectedRun !== "all"
-      ? (eventsQuery.data ?? [])
-      : (data?.events ?? []);
+    selectedRun !== "all" ? (eventsQuery.data ?? []) : (data?.events ?? []);
+
+  const eventsLoading = selectedRun !== "all" ? eventsQuery.isLoading : loading;
 
   return (
-    <main className="shell">
-      <section className="hero">
-        <div>
-          <p className="eyebrow">Messy CSV to durable inventory truth</p>
-          <h1>Digithon Inventory Normalizer</h1>
-          <p>
-            Trigger an ingest run, let the worker normalize chaotic retail exports, and watch the
-            persisted workflow events explain every step.
-          </p>
+    <div className="min-h-screen bg-[#EFF6FF]">
+      <main className="max-w-6xl mx-auto px-5 py-8 space-y-6">
+        <section className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 bg-[#1E40AF] text-white rounded-3xl p-8 shadow-2xl shadow-[#1E40AF]/25">
+          <div>
+            <p className="text-[#F7B160] text-xs font-black uppercase tracking-widest mb-2">
+              Messy CSV to durable inventory truth
+            </p>
+            <h1 className="text-4xl sm:text-5xl font-black leading-tight mb-3">
+              Digithon Inventory Normalizer
+            </h1>
+            <p className="text-white/70 max-w-lg">
+              Trigger an ingest run, let the worker normalize chaotic retail exports, and watch the
+              persisted workflow events explain every step.
+            </p>
+          </div>
+          <IngestPanel />
+        </section>
+
+        {dashboard.isError && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>API unavailable</AlertTitle>
+            <AlertDescription>
+              Start the backend with <code className="font-mono">poetry run api</code>.
+            </AlertDescription>
+          </Alert>
+        )}
+
+        <RunStatus run={latestRun} />
+        <KpiCards kpis={data?.kpis} loading={loading} />
+        <Separator />
+
+        <StoreFilter
+          stores={data?.stores ?? []}
+          runs={data?.runs ?? []}
+          selectedStore={selectedStore}
+          selectedRun={selectedRun}
+          onStoreChange={setSelectedStore}
+          onRunChange={setSelectedRun}
+        />
+
+        <div className="grid grid-cols-1 lg:grid-cols-[1.7fr_0.8fr] gap-6">
+          <Card>
+            <CardHeader><CardTitle>Normalized Records</CardTitle></CardHeader>
+            <CardContent><RecordsTable records={records} loading={loading} /></CardContent>
+          </Card>
+          <Card>
+            <CardHeader><CardTitle>Workflow Events</CardTitle></CardHeader>
+            <CardContent><EventsTimeline events={events} loading={eventsLoading} /></CardContent>
+          </Card>
         </div>
-        <IngestPanel />
-      </section>
-
-      {dashboard.isError && (
-        <p className="error">API unavailable — start the backend with <code>poetry run api</code>.</p>
-      )}
-      {dashboard.isLoading && <p className="loading">Connecting to API…</p>}
-
-      <RunStatus run={latestRun} />
-
-      <KpiCards kpis={data?.kpis} />
-
-      <StoreFilter
-        stores={data?.stores ?? []}
-        runs={data?.runs ?? []}
-        selectedStore={selectedStore}
-        selectedRun={selectedRun}
-        onStoreChange={setSelectedStore}
-        onRunChange={setSelectedRun}
-      />
-
-      <section className="grid">
-        <div className="panel table-panel">
-          <h2>Normalized Records</h2>
-          <RecordsTable records={records} />
-        </div>
-
-        <div className="panel timeline-panel">
-          <h2>Workflow Events</h2>
-          <EventsTimeline events={events} />
-        </div>
-      </section>
-    </main>
+      </main>
+    </div>
   );
+}
+
+function App() {
+  const [view, setView] = useState<"landing" | "dashboard">("landing");
+
+  if (view === "landing") {
+    return <LandingPage onLaunch={() => setView("dashboard")} />;
+  }
+
+  return <Dashboard />;
 }
 
 export default App;
