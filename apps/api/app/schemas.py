@@ -19,6 +19,7 @@ class IngestRun(BaseModel):
     id: UUID
     user_id: UUID
     source_filename: str
+    workflow_id: str | None = None
     status: RunStatus
     started_at: datetime | None = None
     completed_at: datetime | None = None

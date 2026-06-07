@@ -20,9 +20,15 @@ const repoRoot = path.resolve(__dirname, "../../..");
 
 export async function runNormalizer(sourceFilename: string): Promise<NormalizedRecord[]> {
   return new Promise((resolve, reject) => {
+    const useScript = process.env.NORMALIZER_MODE === "script";
+    const command = useScript ? "python3" : "poetry";
+    const args = useScript
+      ? ["packages/normalizer/normalizer/normalize.py", "--input", sourceFilename]
+      : ["run", "normalizer", "--input", sourceFilename];
+
     execFile(
-      "poetry",
-      ["run", "normalizer", "--input", sourceFilename],
+      command,
+      args,
       {
         cwd: repoRoot,
         maxBuffer: 10 * 1024 * 1024,

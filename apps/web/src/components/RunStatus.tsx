@@ -18,6 +18,7 @@ export function RunStatus({ run }: Props) {
       <span className="text-muted-foreground">Latest run</span>
       <Badge variant={STATUS_VARIANT[run.status]}>{run.status}</Badge>
       <code className="text-xs opacity-50">{run.id.slice(0, 8)}</code>
+      {run.workflow_id && <code className="text-xs opacity-50">wf {run.workflow_id.slice(0, 8)}</code>}
       {run.error_message && (
         <span className="text-destructive text-xs">{run.error_message}</span>
       )}

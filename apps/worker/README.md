@@ -1,6 +1,6 @@
 # Digithon Worker
 
-TypeScript ingest worker. Claims queued runs, calls the Python normalizer, persists raw and normalized records idempotently, and appends a full workflow event timeline.
+TypeScript worker supervisor. It schedules queued ingest runs into OpenWorkflow, then the OpenWorkflow worker runtime executes durable steps that call the Python normalizer, persist raw and normalized records idempotently, and append a workflow event timeline.
 
 ## Requirements
 
@@ -19,6 +19,9 @@ poetry install
 | Variable | Required | Description |
 |---|---|---|
 | `DATABASE_URL` | Yes | Postgres connection string |
+| `OPENWORKFLOW_POSTGRES_URL` | No | Optional separate OpenWorkflow Postgres URL. Defaults to `DATABASE_URL`. |
+| `OPENWORKFLOW_NAMESPACE_ID` | No | OpenWorkflow namespace. Defaults to `digithon-local`. |
+| `OPENWORKFLOW_SCHEMA` | No | OpenWorkflow schema. Defaults to `openworkflow`. |
 | `DEMO_STEP_DELAY_MS` | No | Ms to sleep between steps (default 0). Set to 1500 for the crash-resume demo. |
 
 ## Start
@@ -38,11 +41,11 @@ psql "$DATABASE_URL" -c "insert into ingest_runs (user_id, source_filename, stat
 
 ## Workflow steps
 
-The worker processes each run through 7 durable steps in order:
+OpenWorkflow processes each run through durable steps in order:
 
 | # | Step | Event type emitted | Table written |
 |---|---|---|---|
-| 1 | claim_run | `run_claimed / succeeded` | `ingest_runs` status → running |
+| 1 | claim_run | `run_claimed / succeeded` | `ingest_runs` status → running, `workflow_id` set |
 | 2 | load_csv | `csv_loaded / started+succeeded` | — |
 | 3 | store_raw_rows | `raw_rows_stored / started+succeeded` | `raw_data` |
 | 4 | normalize_python | `normalization_started / normalization_completed` | — |
@@ -56,7 +59,7 @@ Re-running the worker on the same run ID never creates duplicate rows:
 
 - `raw_data` — unique constraint on `(run_id, source_row_hash)`. Retries hit `ON CONFLICT DO NOTHING`.
 - `normalized_data` — unique constraint on `raw_data_id`. Retries hit `ON CONFLICT DO NOTHING`.
-- `ingest_runs` claim — uses `FOR UPDATE SKIP LOCKED` so two workers never grab the same run.
+- OpenWorkflow uses workflow leases and the scheduler uses an idempotency key of `ingest:<run_id>` so duplicate scheduling does not create duplicate workflow execution.
 
 ## Crash-Resume Demo
 

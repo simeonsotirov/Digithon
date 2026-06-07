@@ -36,6 +36,364 @@ The first priority is a fully working end-to-end MVP. If time remains after the 
 
 ## Source Ingestion
 
+### Canonical End-To-End Product Process
+
+This is the product process developers should implement and demo. Keep every step visible through persisted state, workflow events, and the ShadCN dashboard.
+
+```text
+React/ShadCN UI
+  -> user chooses source: local CSV/XLSX, Google Drive link/id, or seeded demo data
+  -> FastAPI POST /ingest validates source metadata
+  -> ingest_runs row is created with status = queued
+  -> OpenWorkflow worker claims the queued run
+  -> worker resolves and fetches the source if needed
+  -> worker parses the file into generic row dictionaries
+  -> raw_data stores the exact parsed rows for auditability
+  -> normalizer maps raw rows into our supported canonical dataset
+  -> normalized_data stores validated normalized records
+  -> predictor reads normalized_data + calendar_events
+  -> inventory_predictions stores explainable store/product stock needs
+  -> FastAPI read endpoints expose dashboard data
+  -> React Query fetches the data
+  -> ShadCN dashboard displays ingest status, raw/normalized KPIs, records, events, upcoming demand events, and predicted stock needs
+```
+
+Developer implementation rule: do not skip directly from upload to normalized records. The raw rows must be persisted first, the normalizer must produce our canonical dataset shape, the predictor must operate on normalized data rather than the original customer file shape, and the frontend must read persisted API data rather than calculating server state in the browser.
+
+#### Step 1 - UI Source Selection
+
+The user starts from the one-screen React dashboard. Use ShadCN primitives and custom wrappers composed from ShadCN.
+
+Supported source actions:
+
+```text
+Upload CSV/XLSX
+Paste Google Drive file link or file id
+Run seeded demo file
+```
+
+The UI should present these as one `IngestPanel`, not as separate pages. Local upload and seeded file should be the reliable demo path. Google Drive should be available if implemented, but it must not block the core demo.
+
+Recommended ShadCN composition:
+
+```text
+IngestPanel:
+- Card
+- CardHeader
+- CardContent
+- Button
+- Input
+- Alert
+- Skeleton when mutation/refetch is pending
+```
+
+UI rules:
+
+1. Disable ingest controls while an ingest mutation is pending.
+2. Show a clear queued/running/completed/failed run status after submission.
+3. Trigger React Query invalidation/refetch for `/dashboard`, `/runs`, and `/events` after creating an ingest run.
+4. Do not store uploaded results, normalized records, events, or predictions in Zustand.
+5. Zustand may store only selected source mode, selected store, selected run, selected risk filter, and local panel state.
+
+#### Step 2 - FastAPI Creates The Run
+
+FastAPI owns request validation and run creation. It should not parse, normalize, predict, or persist raw rows inside the request handler.
+
+Recommended request shape:
+
+```text
+IngestRequest:
+- source_type: Literal['csv_upload', 'xlsx_upload', 'google_drive', 'seeded_file']
+- source_filename: str | None
+- source_uri: str | None
+- source_mime_type: str | None
+- user_id: str | None
+```
+
+MVP compatibility rule: if the current implementation only accepts `source_filename`, keep it working for seeded files while extending the contract. Do not break the seeded demo path.
+
+API behavior:
+
+1. Validate `source_type` and source metadata.
+2. Resolve the demo user if `user_id` is omitted.
+3. Insert an `ingest_runs` row with `status = 'queued'`.
+4. Append or allow the worker to append a `run_created` event.
+5. Return the typed `IngestRun` response immediately.
+
+#### Step 3 - Workflow Claims And Resolves Source
+
+OpenWorkflow owns execution. The worker claims queued runs and transitions the run to `running`.
+
+Source resolution rules:
+
+```text
+seeded_file:
+- Resolve to a repository seed path.
+- No external network dependency.
+
+csv_upload / xlsx_upload:
+- Resolve to the uploaded file location.
+- Parse by MIME type or extension.
+- For MVP, local temporary file storage is acceptable if documented.
+
+google_drive:
+- Accept a link or file id.
+- Fetch/export the file to a parseable CSV/XLSX format if feasible.
+- If Google Drive blocks progress, mark the event failed and keep seeded/local ingest working.
+```
+
+Required events:
+
+```text
+claim_run
+source_received
+source_resolved
+source_fetched
+```
+
+#### Step 4 - Parse Into Generic Raw Rows
+
+Parsing converts all source types into one internal shape:
+
+```text
+list[dict[str, JSON-safe value]]
+```
+
+Rules:
+
+1. CSV, XLSX, and Google Drive exports must produce the same row-list shape before raw persistence.
+2. Convert pandas/numpy values into JSON-safe values before database insertion.
+3. Preserve original column names and values in `raw_payload`.
+4. Do not discard messy values just because they are invalid; store them raw and let normalization add quality notes.
+5. Return counts, ids, or references from workflow steps instead of large DataFrames.
+
+Required event:
+
+```text
+parse_tabular_data / tabular_data_parsed
+```
+
+#### Step 5 - Persist Raw Data First
+
+Every parsed row must be stored in `raw_data` before normalization.
+
+Raw persistence contract:
+
+```text
+raw_data:
+- user_id
+- run_id
+- source_filename
+- source_row_number
+- source_row_hash
+- raw_payload
+```
+
+Idempotency rule:
+
+```text
+unique (run_id, source_row_hash)
+```
+
+This is required for auditability, retry safety, and the crash/resume demo. If the worker dies after raw persistence, restarting it must not duplicate raw rows.
+
+Required event:
+
+```text
+store_raw_rows / raw_rows_stored
+```
+
+#### Step 6 - Normalize Into Our Supported Dataset
+
+The normalizer converts customer-specific messy data into the canonical dataset that Digithon supports. Downstream systems should depend on this canonical dataset, not on the original uploaded file shape.
+
+Canonical normalized dataset:
+
+```text
+- raw_data_id
+- run_id
+- store_id
+- canonical_store
+- product_name
+- quantity
+- price
+- sale_date
+- normalized_payload
+- quality_notes
+- reorder_signal
+```
+
+Normalizer responsibilities:
+
+1. Map messy column names to supported concepts such as store, product, quantity, price, and sale date.
+2. Canonicalize store names.
+3. Canonicalize product names.
+4. Parse mixed date formats.
+5. Parse messy prices.
+6. Parse quantities.
+7. Emit quality notes for corrections, defaults, suspicious values, and invalid values.
+8. Emit deterministic current-state `reorder_signal`.
+
+Required events:
+
+```text
+normalize_python / normalization_started
+normalize_python / normalization_completed
+persist_normalized_rows / normalized_rows_stored
+```
+
+Idempotency rule:
+
+```text
+unique (normalized_data.raw_data_id)
+```
+
+#### Step 7 - Predict From Normalized Data
+
+Predictions must run on `normalized_data`, not on raw uploaded rows. This guarantees predictions use the same canonical store/product/date/quantity semantics across CSV, XLSX, Google Drive, and seeded data.
+
+Prediction inputs:
+
+```text
+normalized_data:
+- store_id
+- product_name
+- quantity
+- sale_date
+- reorder_signal
+
+calendar_events:
+- event_name
+- event_type
+- starts_on
+- ends_on
+- impact_score
+- impact_scope
+- product_tags
+```
+
+Prediction output table:
+
+```text
+inventory_predictions:
+- run_id
+- store_id
+- product_name
+- forecast_date
+- baseline_quantity
+- predicted_quantity
+- event_uplift
+- risk_level
+- related_event_id
+- explanation_notes
+- payload
+```
+
+Prediction rules:
+
+1. Compute a baseline from recent normalized rows grouped by store and product.
+2. Match upcoming `calendar_events` by product name or product tag.
+3. Apply deterministic uplift from event type and impact score.
+4. Generate `risk_level` from the predicted demand ratio.
+5. Store human-readable explanation notes for every prediction.
+6. Persist predictions idempotently so workflow retries do not duplicate rows.
+
+Required events:
+
+```text
+generate_inventory_predictions / prediction_started
+generate_inventory_predictions / predictions_stored
+generate_inventory_predictions / prediction_completed
+```
+
+#### Step 8 - FastAPI Serves Persisted Dashboard Data
+
+The dashboard must read persisted data through FastAPI only.
+
+Required dashboard reads:
+
+```text
+GET /dashboard
+GET /runs
+GET /events?run_id=...
+GET /calendar-events
+GET /predictions
+```
+
+`GET /dashboard` should aggregate:
+
+```text
+kpis
+prediction_kpis
+runs
+stores
+records
+upcoming_events
+predictions
+events
+```
+
+Rules:
+
+1. Do not let the frontend query Postgres/Supabase directly.
+2. Do not calculate normalized records or predictions in React.
+3. Keep responses typed with Pydantic.
+4. Keep list sizes bounded for dashboard performance.
+
+#### Step 9 - ShadCN Dashboard Display
+
+The UI should tell the full pipeline story in one screen.
+
+Recommended layout:
+
+```text
+Hero + IngestPanel
+Current RunStatus
+KpiCards
+Store / Run / Risk filters
+Normalized Records table
+Predicted Stock Needs table
+Upcoming Demand Events panel
+Workflow Events timeline
+```
+
+ShadCN-first component plan:
+
+```text
+KpiCards -> Card, Badge, Skeleton
+IngestPanel -> Card, Button, Input, Alert, Skeleton
+RunStatus -> Badge, Card
+StoreFilter -> Select
+RecordsTable -> Table, Badge, ScrollArea, Skeleton
+PredictionTable -> Table, Badge, ScrollArea, Skeleton
+UpcomingEventsPanel -> Card, Badge, ScrollArea
+EventsTimeline -> Card, Badge, ScrollArea
+```
+
+Display requirements:
+
+1. Every run status must be visible.
+2. Every workflow failure must be visible in the timeline.
+3. Every prediction must show a reason, not only a predicted quantity.
+4. Prediction rows should show baseline quantity, event uplift, predicted quantity, related event, and risk badge.
+5. Empty states should explain what action generates the missing data.
+6. Loading states should use ShadCN `Skeleton` and keep layout stable.
+
+#### Step 10 - Demo Narrative
+
+Use this as the judge-facing story:
+
+```text
+The user uploads messy retail data or runs a seeded source.
+FastAPI creates a queued ingest run.
+OpenWorkflow durably processes the run.
+Raw rows are saved first so the import is auditable.
+The normalizer converts messy customer data into Digithon's supported dataset.
+The predictor uses normalized records and seeded events like Super Bowl and Black Friday.
+The ShadCN dashboard shows current inventory signals, predicted stock needs, demand events, and every workflow event.
+If the worker crashes, the workflow resumes without duplicate raw, normalized, or prediction rows.
+```
+
 ### Supported MVP Sources
 
 ```text

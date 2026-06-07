@@ -6,7 +6,16 @@
     "apps/web"
   ],
   "scripts": {
+    "openworkflow": "openworkflow dashboard --port 3000",
     "worker": "npm --workspace apps/worker run worker",
     "web": "npm --workspace apps/web run dev"
+  },
+  "devDependencies": {
+    "@openworkflow/cli": "^0.4.4",
+    "@openworkflow/dashboard": "^0.1.9"
+  },
+  "dependencies": {
+    "openworkflow": "^0.9.0",
+    "postgres": "^3.4.9"
   }
 }
