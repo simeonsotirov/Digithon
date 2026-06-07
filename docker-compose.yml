@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_DB: digithon
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     ports:
       - "55432:5432"
     volumes:
@@ -25,7 +25,7 @@ services:
     volumes:
       - ./db/migrations:/migrations:ro
     environment:
-      PGPASSWORD: postgres
+      PGPASSWORD: ${POSTGRES_PASSWORD:-postgres}
     command: >
       sh -c 'for f in /migrations/*.sql; do psql -v ON_ERROR_STOP=1 -h postgres -U postgres -d digithon -f "$${f}"; done'
 
@@ -38,7 +38,7 @@ services:
       migrate:
         condition: service_completed_successfully
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/digithon
+      DATABASE_URL: ${DATABASE_URL:-postgresql://postgres:postgres@postgres:5432/digithon}
     ports:
       - "8000:8000"
 
@@ -63,8 +63,8 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/digithon
-      OPENWORKFLOW_POSTGRES_URL: postgresql://postgres:postgres@postgres:5432/digithon
+      DATABASE_URL: ${DATABASE_URL:-postgresql://postgres:postgres@postgres:5432/digithon}
+      OPENWORKFLOW_POSTGRES_URL: ${DATABASE_URL:-postgresql://postgres:postgres@postgres:5432/digithon}
       OPENWORKFLOW_NAMESPACE_ID: digithon-local
       OPENWORKFLOW_SCHEMA: openworkflow
       NORMALIZER_MODE: script
@@ -80,8 +80,8 @@ services:
       migrate:
         condition: service_completed_successfully
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/digithon
-      OPENWORKFLOW_POSTGRES_URL: postgresql://postgres:postgres@postgres:5432/digithon
+      DATABASE_URL: ${DATABASE_URL:-postgresql://postgres:postgres@postgres:5432/digithon}
+      OPENWORKFLOW_POSTGRES_URL: ${DATABASE_URL:-postgresql://postgres:postgres@postgres:5432/digithon}
       OPENWORKFLOW_NAMESPACE_ID: digithon-local
       OPENWORKFLOW_SCHEMA: openworkflow
       NORMALIZER_MODE: script
