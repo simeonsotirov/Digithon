@@ -1,5 +1,6 @@
 from datetime import date, datetime
 from typing import Any, Literal
+from uuid import UUID
 
 from pydantic import BaseModel, Field
 
@@ -15,8 +16,8 @@ class IngestRequest(BaseModel):
 
 
 class IngestRun(BaseModel):
-    id: str
-    user_id: str
+    id: UUID
+    user_id: UUID
     source_filename: str
     status: RunStatus
     started_at: datetime | None = None
@@ -26,15 +27,15 @@ class IngestRun(BaseModel):
 
 
 class Store(BaseModel):
-    id: str
+    id: UUID
     canonical_name: str
     display_name: str
     created_at: datetime
 
 
 class Event(BaseModel):
-    id: str
-    run_id: str
+    id: UUID
+    run_id: UUID
     workflow_id: str
     step_name: str
     event_type: str
@@ -44,10 +45,10 @@ class Event(BaseModel):
 
 
 class NormalizedRecord(BaseModel):
-    id: str
-    raw_data_id: str
-    run_id: str
-    store_id: str
+    id: UUID
+    raw_data_id: UUID
+    run_id: UUID
+    store_id: UUID
     store_name: str
     product_name: str
     quantity: int
