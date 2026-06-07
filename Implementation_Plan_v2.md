@@ -1135,12 +1135,54 @@ timeline and event panels remain below primary tables
 
 #### Typography
 
-Use system fonts for implementation speed, with strong hierarchy.
+Use an Atelier-inspired typography system with strong hierarchy, high density, and clear operational readability. The referenced site uses `Formation Sans` for distinctive heading/display moments and `JetBrains Mono Variable` for technical/code-like text. Do not copy the referenced site's colors; only borrow the typography direction and interaction principles.
+
+Font decision:
+
+```text
+Display / headings: Formation Sans
+Body / UI text: system sans or Formation Sans if readability remains strong
+Technical metadata / code / hashes / row ids: JetBrains Mono Variable
+Fallback sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif
+Fallback mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace
+```
+
+Licensing rule:
+
+```text
+Do not commit copied font binaries from atelier.applauselab.ai unless the team confirms the font license allows reuse.
+If Formation Sans licensing is unclear, use the fallback stack for the MVP and keep the `font-heading` token ready.
+JetBrains Mono is open source and can be used for monospace text if installed through a package or self-hosted from an approved source.
+```
+
+Recommended CSS tokens:
+
+```css
+:root {
+  --font-heading: "Formation Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+```
+
+Optional approved font-face setup:
+
+```css
+@font-face {
+  font-family: "Formation Sans";
+  src: url("/fonts/formation-sans-regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+```
+
+Only add this `@font-face` after the team has an approved font file. If not approved, do not block frontend work.
 
 Recommended font stack:
 
 ```css
-font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+font-family: var(--font-sans);
 ```
 
 Type scale:
@@ -1155,6 +1197,24 @@ badge text: text-xs font-medium
 ```
 
 Use `tabular-nums` for KPI numbers, quantities, prices, row counts, dates, and prediction values.
+
+Atelier-inspired typography principles:
+
+1. Use large, confident section titles but keep data tables compact.
+2. Use uppercase micro-labels for panel labels, filters, and metadata groups.
+3. Use monospace only for technical identifiers, JSON-like metadata, row hashes, workflow ids, and code snippets.
+4. Keep body copy short and operational. Prefer `Run completed`, `Prediction generated`, and `3 high-risk items` over long marketing text.
+5. Use tight tracking for large headings and wider tracking for small uppercase labels.
+6. Use high information density, but separate panels with spacing and hierarchy so the UI remains scannable.
+7. Pair every AI/prediction claim with evidence text, for example event name, baseline quantity, uplift amount, and risk reason.
+
+ShadCN usage:
+
+```text
+Apply `font-heading` to page titles, hero text, and major card headings.
+Apply `font-sans` to ShadCN Button, Input, Select, Table, Alert, Badge, and Card body text.
+Apply `font-mono` to workflow ids, run ids, source row hashes, JSON previews, timestamps when used as technical metadata, and CLI-like snippets.
+```
 
 #### Card System
 
