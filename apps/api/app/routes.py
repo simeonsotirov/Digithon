@@ -1,11 +1,15 @@
+import logging
 from uuid import uuid4
 
 from fastapi import APIRouter, HTTPException, Query
+from fastapi.responses import JSONResponse
 
 
 from app import db
-from app.schemas import DashboardResponse, Event, IngestRequest, IngestRun
+from app.schemas import DashboardResponse, Event, HealthResponse, IngestRequest, IngestRun
 
+
+log = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -17,9 +21,15 @@ def _demo_user_id() -> str:
     return str(user["id"])
 
 
-@router.get("/health")
-def health() -> dict[str, str]:
-    return {"status": "ok"}
+@router.get("/health", response_model=HealthResponse)
+def health() -> HealthResponse:
+    try:
+        db.ping()
+        return HealthResponse(status="ok", db="ok")
+    except Exception as exc:
+        log.error("Health check: database unreachable — %s", exc)
+        body = HealthResponse(status="degraded", db="error", detail=str(exc))
+        return JSONResponse(status_code=503, content=body.model_dump())
 
 
 @router.post("/ingest", response_model=IngestRun)

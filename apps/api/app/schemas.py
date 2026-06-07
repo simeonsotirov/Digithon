@@ -2,7 +2,7 @@ from datetime import date, datetime
 from typing import Any, Literal
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 RunStatus = Literal["queued", "running", "completed", "failed"]
@@ -16,6 +16,8 @@ class IngestRequest(BaseModel):
 
 
 class IngestRun(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     user_id: UUID
     source_filename: str
@@ -27,6 +29,8 @@ class IngestRun(BaseModel):
 
 
 class Store(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     canonical_name: str
     display_name: str
@@ -34,6 +38,8 @@ class Store(BaseModel):
 
 
 class Event(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     run_id: UUID
     workflow_id: str
@@ -45,6 +51,8 @@ class Event(BaseModel):
 
 
 class NormalizedRecord(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     raw_data_id: UUID
     run_id: UUID
@@ -61,6 +69,8 @@ class NormalizedRecord(BaseModel):
 
 
 class DashboardKpis(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     total_raw_rows: int
     total_normalized_rows: int
     quality_issue_count: int
@@ -69,8 +79,16 @@ class DashboardKpis(BaseModel):
 
 
 class DashboardResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     kpis: DashboardKpis
     runs: list[IngestRun]
     stores: list[Store]
     records: list[NormalizedRecord]
     events: list[Event]
+
+
+class HealthResponse(BaseModel):
+    status: Literal["ok", "degraded"]
+    db: Literal["ok", "error"]
+    detail: str | None = None
