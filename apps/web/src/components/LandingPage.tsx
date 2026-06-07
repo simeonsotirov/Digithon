@@ -97,7 +97,7 @@ export function LandingPage({ onLaunch }: Props) {
           </div>
 
         </div>
-      </section>
+      </nav>
 
       {/* ── Stats bar ── */}
       <section className="border-b bg-card">
