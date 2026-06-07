@@ -2,6 +2,7 @@ import { defineWorkflow } from "openworkflow";
 
 import {
   demoDelay,
+  generatePredictions,
   loadCsv,
   markRunComplete,
   markRunFailed,
@@ -47,6 +48,9 @@ export const ingestWorkflow = defineWorkflow(
         storeNormalizedRows(ingestRun, workflowId, records),
       );
       await step.run({ name: "demo_delay_after_persist" }, demoDelay);
+
+      await step.run({ name: "generate_predictions" }, () => generatePredictions(ingestRun, workflowId));
+      await step.run({ name: "demo_delay_after_predictions" }, demoDelay);
 
       await step.run({ name: "mark_run_complete" }, () => markRunComplete(input.runId, workflowId));
 

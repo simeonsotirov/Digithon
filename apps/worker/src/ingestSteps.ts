@@ -149,6 +149,129 @@ export async function storeNormalizedRows(
   });
 }
 
+type PredictionSourceRow = {
+  store_id: string;
+  store_name: string;
+  product_name: string;
+  quantity: number;
+  sale_date: string;
+  normalized_payload: Record<string, unknown>;
+};
+
+type CalendarEventRow = {
+  id: string;
+  event_name: string;
+  impact_score: string | number;
+  product_tags: string[];
+  payload: Record<string, unknown>;
+};
+
+function numeric(value: unknown, fallback = 0) {
+  const parsed = typeof value === "number" ? value : Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
+
+function tagsForRecord(record: PredictionSourceRow) {
+  const payload = record.normalized_payload ?? {};
+  const category = typeof payload.category === "string" ? payload.category : "";
+  return new Set([record.product_name, category].filter(Boolean).map((value) => value.toLowerCase()));
+}
+
+function confidence(rowCount: number, directMatch: boolean) {
+  if (rowCount >= 5 && directMatch) return "high";
+  if (rowCount >= 2) return "medium";
+  return "low";
+}
+
+export async function generatePredictions(run: IngestRun, workflowId: string) {
+  await writeEvent(run.id, workflowId, "generate_predictions", "prediction_started", "started");
+
+  const source = await query<PredictionSourceRow>(
+    `select n.store_id, s.display_name as store_name, n.product_name, n.quantity, n.sale_date,
+            n.normalized_payload
+     from normalized_data n
+     join stores s on s.id = n.store_id
+     where n.run_id = $1::uuid`,
+    [run.id],
+  );
+
+  const events = await query<CalendarEventRow>(
+    `select id, event_name, impact_score, product_tags, payload
+     from calendar_events
+     where starts_on >= current_date
+     order by starts_on asc, impact_score desc
+     limit 25`,
+  );
+
+  const groups = new Map<string, PredictionSourceRow[]>();
+  for (const row of source.rows) {
+    const key = `${row.store_id}:${row.product_name}`;
+    groups.set(key, [...(groups.get(key) ?? []), row]);
+  }
+
+  let inserted = 0;
+  for (const rows of groups.values()) {
+    const latest = rows.reduce((best, row) => (row.sale_date > best.sale_date ? row : best), rows[0]);
+    const baselineQuantity = rows.reduce((sum, row) => sum + Number(row.quantity), 0) / rows.length;
+    const availableStock = Math.max(0, Math.round(numeric(latest.normalized_payload.available_stock)));
+    const recordTags = tagsForRecord(latest);
+
+    for (const event of events.rows) {
+      const eventTags = event.product_tags.map((tag) => tag.toLowerCase());
+      const matchingTag = eventTags.find((tag) => recordTags.has(tag));
+      if (!matchingTag) continue;
+
+      const directMatch = matchingTag === latest.product_name.toLowerCase();
+      const defaultUplift = numeric(event.payload.default_uplift_multiplier, 0.35);
+      const impactScore = numeric(event.impact_score, 0);
+      const upliftMultiplier = 1 + defaultUplift * impactScore;
+      const predictedQuantity = Math.ceil(baselineQuantity * upliftMultiplier);
+      const recommendedReorderQuantity = Math.max(0, predictedQuantity - availableStock);
+      if (recommendedReorderQuantity <= 0) continue;
+
+      const reasons = [
+        `Matched ${event.event_name} through ${matchingTag}`,
+        `Baseline demand ${baselineQuantity.toFixed(1)} units from ${rows.length} normalized rows`,
+        `Available stock is ${availableStock} units after missing/damaged/expired adjustments`,
+        `Event impact score ${impactScore.toFixed(2)} with uplift multiplier ${upliftMultiplier.toFixed(2)}`,
+      ];
+
+      await query(
+        `insert into inventory_predictions (
+           run_id, store_id, calendar_event_id, product_name, baseline_quantity, available_stock,
+           predicted_quantity, uplift_multiplier, recommended_reorder_quantity, confidence, reasons
+         ) values ($1::uuid, $2::uuid, $3::uuid, $4, $5, $6, $7, $8, $9, $10, $11::jsonb)
+         on conflict (run_id, store_id, product_name, calendar_event_id) do update set
+           baseline_quantity = excluded.baseline_quantity,
+           available_stock = excluded.available_stock,
+           predicted_quantity = excluded.predicted_quantity,
+           uplift_multiplier = excluded.uplift_multiplier,
+           recommended_reorder_quantity = excluded.recommended_reorder_quantity,
+           confidence = excluded.confidence,
+           reasons = excluded.reasons`,
+        [
+          run.id,
+          latest.store_id,
+          event.id,
+          latest.product_name,
+          baselineQuantity.toFixed(2),
+          availableStock,
+          predictedQuantity,
+          upliftMultiplier.toFixed(4),
+          recommendedReorderQuantity,
+          confidence(rows.length, directMatch),
+          JSON.stringify(reasons),
+        ],
+      );
+      inserted += 1;
+    }
+  }
+
+  await writeEvent(run.id, workflowId, "generate_predictions", "prediction_completed", "succeeded", {
+    count: inserted,
+  });
+}
+
 export async function markRunComplete(runId: string, workflowId: string) {
   await query(
     `update ingest_runs
