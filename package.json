@@ -8,7 +8,8 @@
   "scripts": {
     "openworkflow": "openworkflow dashboard --port 3000",
     "worker": "npm --workspace apps/worker run worker",
-    "web": "npm --workspace apps/web run dev"
+    "web": "npm --workspace apps/web run dev",
+    "migrate": "PGHOST=${PGHOST:-localhost} PGPORT=${PGPORT:-55432} PGUSER=${PGUSER:-postgres} PGDATABASE=${PGDATABASE:-digithon} PGPASSWORD=${PGPASSWORD:-postgres} sh db/migrate.sh"
   },
   "devDependencies": {
     "@openworkflow/cli": "^0.4.4",

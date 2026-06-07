@@ -96,40 +96,6 @@ export type Dashboard = {
   events: Event[];
 };
 
-export type CalendarEvent = {
-  id: string;
-  event_name: string;
-  event_type: "holiday" | "sports" | "shopping" | "seasonal" | "local_event";
-  starts_on: string;
-  ends_on: string;
-  country: string;
-  region: string | null;
-  city: string | null;
-  impact_scope: "national" | "regional" | "local";
-  impact_score: number;
-  product_tags: string[];
-  payload: Record<string, unknown>;
-  created_at: string;
-};
-
-export type InventoryPrediction = {
-  id: string;
-  run_id: string;
-  store_id: string;
-  store_name: string;
-  product_name: string;
-  forecast_date: string;
-  baseline_quantity: number;
-  predicted_quantity: number;
-  event_uplift: number;
-  risk_level: "ok" | "watch" | "reorder" | "stockout";
-  related_event_id: string | null;
-  related_event_name: string | null;
-  explanation_notes: string[];
-  payload: Record<string, unknown>;
-  created_at: string;
-};
-
 export type PredictionKpis = {
   predicted_reorder_count: number;
   predicted_stockout_count: number;
@@ -168,13 +134,22 @@ export async function getCalendarEvents(): Promise<CalendarEvent[]> {
   return response.json();
 }
 
-export async function getPredictions(): Promise<InventoryPrediction[]> {
-  const response = await fetch(`${apiBase}/predictions`);
+export async function getPredictions(
+  params?: { run_id?: string; store_id?: string; risk_level?: string },
+): Promise<InventoryPrediction[]> {
+  const query = new URLSearchParams();
+  if (params?.run_id) query.set("run_id", params.run_id);
+  if (params?.store_id) query.set("store_id", params.store_id);
+  const suffix = query.toString() ? `?${query.toString()}` : "";
+  const response = await fetch(`${apiBase}/predictions${suffix}`);
   if (!response.ok) throw new Error("Failed to load predictions");
   return response.json();
 }
 
-export async function createIngest(): Promise<Run> {
+export async function createIngest(_source: IngestSource = { type: "seed" }): Promise<Run> {
+  // The backend currently only accepts the seeded demo CSV; file/drive sources
+  // are accepted by the UI but routed to the same seeded source for now.
+  const body = { source_filename: "db/seed/messy_sales.csv" };
   const response = await fetch(`${apiBase}/ingest`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

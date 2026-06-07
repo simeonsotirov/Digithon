@@ -23,11 +23,13 @@ services:
       postgres:
         condition: service_healthy
     volumes:
-      - ./db/migrations:/migrations:ro
+      - ./db:/db:ro
     environment:
+      PGHOST: postgres
+      PGUSER: postgres
+      PGDATABASE: digithon
       PGPASSWORD: ${POSTGRES_PASSWORD}
-    command: >
-      sh -c 'for f in /migrations/*.sql; do psql -v ON_ERROR_STOP=1 -h postgres -U postgres -d digithon -f "$${f}"; done'
+    command: ["sh", "/db/migrate.sh"]
 
   api:
     build:

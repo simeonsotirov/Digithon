@@ -8,8 +8,8 @@ type Props = {
 };
 
 export function PredictionKpiCards({ predictions, calendarEvents, loading }: Props) {
-  const predictedReorders = predictions.filter((p) => p.risk_level === "reorder").length;
-  const predictedStockouts = predictions.filter((p) => p.risk_level === "stockout").length;
+  const predictedReorders = predictions.filter((p) => p.recommended_reorder_quantity > 0).length;
+  const reorderUnitsTotal = predictions.reduce((sum, p) => sum + p.recommended_reorder_quantity, 0);
   const upcomingEvents = calendarEvents.length;
   const highImpactEvents = calendarEvents.filter((e) => e.impact_score >= 0.7).length;
 
@@ -17,15 +17,15 @@ export function PredictionKpiCards({ predictions, calendarEvents, loading }: Pro
     {
       label: "Predicted Reorders",
       value: predictedReorders,
-      context: "Next 30 days",
+      context: "Items needing restock",
       accent: "border-fuchsia-400/25 from-slate-900 to-fuchsia-950/30",
       metric: "text-fuchsia-300",
       dot: "bg-fuchsia-400",
     },
     {
-      label: "Predicted Stockouts",
-      value: predictedStockouts,
-      context: "Critical risk items",
+      label: "Reorder Units",
+      value: reorderUnitsTotal,
+      context: "Total recommended quantity",
       accent: "border-red-400/25 from-slate-900 to-red-950/30",
       metric: "text-red-300",
       dot: "bg-red-400",

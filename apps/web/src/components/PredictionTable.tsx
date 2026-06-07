@@ -10,11 +10,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const RISK_CLASSES: Record<InventoryPrediction["risk_level"], string> = {
-  ok:       "bg-emerald-400/15 text-emerald-300 border-emerald-400/30",
-  watch:    "bg-amber-400/15 text-amber-300 border-amber-400/30",
-  reorder:  "bg-orange-400/15 text-orange-300 border-orange-400/30",
-  stockout: "bg-red-400/15 text-red-300 border-red-400/30",
+const CONFIDENCE_CLASSES: Record<InventoryPrediction["confidence"], string> = {
+  low:    "bg-slate-400/15 text-slate-300 border-slate-400/30",
+  medium: "bg-amber-400/15 text-amber-300 border-amber-400/30",
+  high:   "bg-emerald-400/15 text-emerald-300 border-emerald-400/30",
 };
 
 function formatNote(note: string) {
@@ -53,11 +52,11 @@ export function PredictionTable({ predictions, loading }: Props) {
             <TableRow className="border-slate-800 hover:bg-transparent">
               <TableHead className="text-xs uppercase tracking-[0.12em] text-slate-400">Store</TableHead>
               <TableHead className="text-xs uppercase tracking-[0.12em] text-slate-400">Product</TableHead>
-              <TableHead className="text-xs uppercase tracking-[0.12em] text-slate-400">Forecast</TableHead>
               <TableHead className="text-xs uppercase tracking-[0.12em] text-slate-400 text-right">Baseline</TableHead>
               <TableHead className="text-xs uppercase tracking-[0.12em] text-slate-400 text-right">Predicted</TableHead>
               <TableHead className="text-xs uppercase tracking-[0.12em] text-slate-400 text-right">Uplift</TableHead>
-              <TableHead className="text-xs uppercase tracking-[0.12em] text-slate-400">Risk</TableHead>
+              <TableHead className="text-xs uppercase tracking-[0.12em] text-slate-400 text-right">Reorder</TableHead>
+              <TableHead className="text-xs uppercase tracking-[0.12em] text-slate-400">Confidence</TableHead>
               <TableHead className="text-xs uppercase tracking-[0.12em] text-slate-400">Event</TableHead>
               <TableHead className="text-xs uppercase tracking-[0.12em] text-slate-400">Reason</TableHead>
             </TableRow>
@@ -70,22 +69,24 @@ export function PredictionTable({ predictions, loading }: Props) {
               >
                 <TableCell className="font-medium text-slate-100 text-sm">{p.store_name}</TableCell>
                 <TableCell className="font-medium text-slate-100 text-sm">{p.product_name}</TableCell>
-                <TableCell className="text-slate-400 text-sm tabular-nums">{p.forecast_date}</TableCell>
                 <TableCell className="text-right tabular-nums text-slate-400 text-sm">{p.baseline_quantity}</TableCell>
                 <TableCell className="text-right tabular-nums text-cyan-300 font-semibold text-sm">{p.predicted_quantity}</TableCell>
                 <TableCell className="text-right tabular-nums text-fuchsia-300 text-sm">
-                  {p.event_uplift > 0 ? `+${p.event_uplift}` : "—"}
+                  {p.uplift_multiplier > 1 ? `×${p.uplift_multiplier}` : "—"}
+                </TableCell>
+                <TableCell className="text-right tabular-nums text-orange-300 font-semibold text-sm">
+                  {p.recommended_reorder_quantity}
                 </TableCell>
                 <TableCell>
-                  <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-semibold ${RISK_CLASSES[p.risk_level]}`}>
-                    {p.risk_level}
+                  <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-semibold ${CONFIDENCE_CLASSES[p.confidence]}`}>
+                    {p.confidence}
                   </span>
                 </TableCell>
                 <TableCell className="text-xs text-fuchsia-300/80">
-                  {p.related_event_name ?? "—"}
+                  {p.event_name ?? "—"}
                 </TableCell>
-                <TableCell className="text-xs text-slate-500 max-w-[180px] truncate" title={p.explanation_notes.map(formatNote).join(", ")}>
-                  {p.explanation_notes.map(formatNote).join(", ") || "—"}
+                <TableCell className="text-xs text-slate-500 max-w-[180px] truncate" title={p.reasons.map(formatNote).join(", ")}>
+                  {p.reasons.map(formatNote).join(", ") || "—"}
                 </TableCell>
               </TableRow>
             ))}
